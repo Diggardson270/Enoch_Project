@@ -1,0 +1,6 @@
+venv/
+test.py
+test.pyt
+db.sqlite3
+__pycache__
+.git/

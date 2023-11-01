@@ -1,0 +1,247 @@
+{% extends "base.html" %}
+{% block content %}
+<!--begin::Main-->
+<div class="app-main flex-column flex-row-fluid" id="kt_app_main">
+    <!--begin::Content wrapper-->
+    <div class="d-flex flex-column flex-column-fluid">
+        <!--begin::Content-->
+        <div id="kt_app_content" class="app-content flex-column-fluid">
+            <!--begin::Content container-->
+            <div id="kt_app_content_container" class="app-container container-xxl">
+                <!--begin::Layout-->
+                <div class="d-flex flex-column flex-lg-row">
+                    <!--begin::Content-->
+                    <div class="flex-lg-row-fluid me-lg-15 order-2 order-lg-1 mb-10 mb-lg-0">
+                        <!--begin::Form-->
+
+                        <!--begin::book-->
+                        <div class="card card-flush pt-3 mb-5 mb-lg-10">
+                            <div class="flash-messages">
+                                {% with messages = get_flashed_messages() %}
+                                {% if messages %}
+                                <ul class="flash">
+                                    {% for message in messages %}
+                                    <li class="{{ message.category }}">{{ message }}</li>
+                                    {% endfor %}
+                                </ul>
+                                {% endif %}
+                                {% endwith %}
+                            </div>
+                            <!--begin::Card header-->
+                            <div class="card-header">
+                                <!--begin::Card title-->
+                                <div class="card-title">
+                                    <h2 class="fw-bold">Books</h2>
+                                </div>
+                                <!--begin::Card title-->
+                            </div>
+                            <!--end::Card header-->
+                            <!--begin::Card body-->
+                            <div class="card-body pt-0">
+                                <!--begin::Table wrapper-->
+                                <div class="table-responsive">
+                                    <!--begin::Table-->
+                                    <table class="table align-middle table-row-dashed fs-6 fw-semibold gy-4"
+                                        id="kt_subscription_products_table">
+                                        <!--begin::Table head-->
+                                        <thead>
+                                            <tr class="text-start text-muted fw-bold fs-7 text-uppercase gs-0">
+                                                <th class="min-w-300px">Book</th>
+                                                <th class="min-w-100px">Author</th>
+                                                <th class="min-w-150px">Category</th>
+                                            </tr>
+                                        </thead>
+                                        <!--end::Table head-->
+                                        <tbody class="text-gray-600">
+                                            {% for book in context.books %}
+                                            <tr>
+                                                <td class="text-capitalize">{{book.title}}</td>
+                                                <td class="text-capitalize">{{book.author.firstname}}
+                                                    {{book.author.lastname}}</td>
+                                                <td class="text-capitalize">{{book.category.name}}</td>
+                                            </tr>
+                                            {% endfor %}
+                                        </tbody>
+                                    </table>
+                                    <!--end::Table-->
+                                </div>
+                                <!--end::Table wrapper-->
+                            </div>
+                            <!--end::Card body-->
+                        </div>
+                        <!--end::book-->
+                        <!--begin::students-->
+                        <div class="card card-flush pt-3 mb-5 mb-lg-10">
+                            <!--begin::Card header-->
+                            <div class="card-header">
+                                <!--begin::Card title-->
+                                <div class="card-title">
+                                    <h2 class="fw-bold">Students</h2>
+                                </div>
+                                <!--begin::Card title-->
+                            </div>
+                            <!--end::Card header-->
+                            <!--begin::Card body-->
+                            <div class="card-body pt-0">
+                                <!--begin::Table wrapper-->
+                                <div class="table-responsive">
+                                    <!--begin::Table-->
+                                    <table class="table align-middle table-row-dashed fs-6 fw-semibold gy-4"
+                                        id="kt_subscription_products_table">
+                                        <!--begin::Table head-->
+                                        <thead>
+                                            <tr class="text-start text-muted fw-bold fs-7 text-uppercase gs-0">
+                                                <th class="min-w-300px">Student</th>
+                                                <th class="min-w-100px">Matric Number</th>
+                                                <th class="min-w-150px">Level</th>
+                                            </tr>
+                                        </thead>
+                                        <!--end::Table head-->
+                                        <tbody class="text-gray-600">
+                                            {% for student in context.students %}
+                                            <tr>
+                                                <td class="text-capitalize">{{student.user.firstname}}
+                                                    {{student.user.lastname}}</td>
+                                                <td class="text-uppercase">{{student.matirc_number}}</td>
+                                                <td>{{student.student_level}}</td>
+                                                <td class="text-end">
+                                                </td>
+                                            </tr>
+                                            {% endfor %}
+                                        </tbody>
+                                    </table>
+                                    <!--end::Table-->
+                                </div>
+                                <!--end::Table wrapper-->
+                            </div>
+                            <!--end::Card body-->
+                        </div>
+                        <!--end::students-->
+
+                        <!--end::Form-->
+                    </div>
+                    <!--end::Content-->
+                    <!--begin::Sidebar-->
+                    <div class="flex-column flex-lg-row-auto w-100 w-lg-250px w-xl-300px mb-10 order-1 order-lg-2">
+                        <!--begin::Card-->
+                        <div class="card card-flush pt-3 mb-0" data-kt-sticky="true"
+                            data-kt-sticky-name="subscription-summary"
+                            data-kt-sticky-offset="{default: false, lg: '200px'}"
+                            data-kt-sticky-width="{lg: '250px', xl: '300px'}" data-kt-sticky-left="auto"
+                            data-kt-sticky-top="150px" data-kt-sticky-animation="false" data-kt-sticky-zindex="95">
+                            <!--begin::Card header-->
+                            <div class="card-header">
+                                <!--begin::Card title-->
+                                <div class="card-title">
+                                    <h2>Summary</h2>
+                                </div>
+                                <!--end::Card title-->
+                            </div>
+                            <!--end::Card header-->
+                            <!--begin::Card body-->
+                            <div class="card-body pt-0 fs-6">
+                                <!--begin::Section-->
+                                <div class="mb-7">
+                                    <!--begin::Title-->
+                                    <h5 class="mb-3">Review information</h5>
+                                    <!--end::Title-->
+                                    <!--begin::Details-->
+                                </div>
+                                <!--end::Section-->
+                                <!--begin::Seperator-->
+                                <div class="separator separator-dashed mb-7"></div>
+                                <!--end::Seperator-->
+                                <!--begin::Section-->
+                                <div class="mb-7">
+                                    <!--begin::Title-->
+                                    <h5 class="mb-3">Books</h5>
+                                    <!--end::Title-->
+                                    <!--begin::Details-->
+                                    <div class="mb-0">
+                                        <!--begin::Plan-->
+                                        <span class="badge badge-light-info me-2">{{context.number_of_books}} Books
+                                            selected</span>
+                                        <!--end::Plan-->
+                                    </div>
+                                    <!--end::Details-->
+                                </div>
+                                <!--end::Section-->
+                                <!--begin::Seperator-->
+                                <div class="separator separator-dashed mb-7"></div>
+                                <!--end::Seperator-->
+                                <!--begin::Section-->
+                                {% if context.not_found %}
+                                <div class="mb-10">
+                                    <!--begin::Title-->
+                                    <h5 class="mb-3">Students that were not found</h5>
+                                    <!--end::Title-->
+                                    <!--begin::Details-->
+                                    <div class="mb-0">
+                                        <!--begin::Card info-->
+                                        {% for student in context.not_found %}
+                                        <div class="fw-semibold text-danger d-flex align-items-center">{{student}}</div>
+                                        {% endfor %}
+                                    </div>
+                                    <!--end::Details-->
+                                </div>
+                                {% endif %}
+                                {% if context.not_enough_in_stock %}
+                                <div class="mb-10">
+                                    <!--begin::Title-->
+                                    <h5 class="mb-3">This books are not enough in stock</h5>
+                                    <!--end::Title-->
+                                    <!--begin::Details-->
+                                    <div class="mb-0">
+                                        <!--begin::Card info-->
+                                        {% for book in context.not_enough_in_stock %}
+                                        <div class="fw-semibold text-danger d-flex align-items-center text-capitalize">{{book.title}}</div>
+                                        {% endfor %}
+                                    </div>
+                                    <!--end::Details-->
+                                </div>
+                                {% endif %}
+                                <!--end::Section-->
+                                <!--begin::Actions-->
+                                <form method="get">
+                                    <div class="mb-0">
+                                        <input class="d-none"  name="continue" value="True" />
+                                        <button type="submit" class="btn btn-primary">
+                                            <!--begin::Indicator label-->
+                                            <span>Submit</span>
+                                            <!--end::Indicator label-->
+                                        </button>
+                                    </div>
+                                </form>
+                                <!--end::Actions-->
+                            </div>
+                            <!--end::Card body-->
+                        </div>
+                        <!--end::Card-->
+                    </div>
+                    <!--end::Sidebar-->
+                </div>
+                <!--end::Layout-->
+            </div>
+            <!--end::Content container-->
+        </div>
+        <!--end::Content-->
+    </div>
+    <!--end::Content wrapper-->
+
+</div>
+<!--end:::Main-->
+{% endblock %}
+
+{% block scripts %}
+<!--begin::Javascript-->
+<script src="{{ url_for('static', filename='plugins/global/plugins.bundle.js') }}"></script>
+<script src="{{ url_for('static', filename='js/scripts.bundle.js') }}"></script>
+<!--end::Global Javascript Bundle-->
+<!--begin::Vendors Javascript(used for this page only)-->
+<script src="{{ url_for('static', filename='plugins/custom/datatables/datatables.bundle.js') }}"></script>
+<!--end::Vendors Javascript-->
+<!--begin::Custom Javascript(used for this page only)-->
+<script src="{{ url_for('static', filename='js/custom/apps/subscriptions/add/products.js') }}"></script>
+<!--end::Custom Javascript-->
+<!--end::Javascript-->
+{% endblock %}

@@ -1,0 +1,324 @@
+{% extends "base.html" %}
+{% block content %}
+<!--begin::Content-->
+<div id="kt_app_content mt-20" class="app-content flex-column-fluid">
+    <!--begin::Content container-->
+    <div id="kt_app_content_container" class="app-container container-xxl">
+        <!--begin::Layout-->
+        <div class="d-flex flex-column flex-xl-row">
+            <!--begin::Content-->
+            <div class="flex-lg-row-fluid ms-lg-15 mt-15">
+                <!--begin:::Tabs-->
+                <ul class="nav nav-custom nav-tabs nav-line-tabs nav-line-tabs-2x border-0 fs-4 fw-semibold mb-8">
+                    <!--begin:::Tab item-->
+                    <li class="nav-item">
+                        <a class="nav-link text-active-primary pb-4 active" data-bs-toggle="tab"
+                            href="#kt_ecommerce_customer_overview">Overview</a>
+                    </li>
+                    <!--end:::Tab item-->
+                    <!--begin:::Tab item-->
+                    <li class="nav-item">
+                        <a class="nav-link text-active-primary pb-4" data-bs-toggle="tab"
+                            href="#kt_ecommerce_customer_general">General Settings</a>
+                    </li>
+                    <!--end:::Tab item-->
+                </ul>
+                <!--end:::Tabs-->
+                <!--begin:::Tab content-->
+                <div class="tab-content" id="myTabContent">
+                    <!--begin:::Tab pane-->
+                    <div class="tab-pane fade show active" id="kt_ecommerce_customer_overview" role="tabpanel">
+                        <div class="row row-cols-1 row-cols-md-2 mb-6 mb-xl-9">
+                            <div class="col">
+                                <!--begin::Card-->
+                                <div class="card pt-4 h-md-100 mb-6 mb-md-0">
+                                    <!--begin::Card header-->
+                                    <div class="card-header border-0">
+                                        <!--begin::Card title-->
+                                        <div class="card-title">
+                                            <h2 class="fw-bold text-capitalize">Author: {{context.author.firstname}} {{context.author.lastname}}</h2>
+                                        </div>
+                                        <!--end::Card title-->
+                                    </div>
+                                    <!--end::Card header-->
+                                    <!--begin::Card body-->
+                                    <div class="card-body pt-0">
+                                        <div class="fw-bold fs-2">
+                                            <div class="d-flex">
+                                                <!--begin::Svg Icon | path: icons/duotune/general/gen030.svg-->
+                                                <span class="svg-icon svg-icon-info svg-icon-2x">
+                                                    <?xml version="1.0" encoding="utf-8"?>
+                                                    <!-- Uploaded to: SVG Repo, www.svgrepo.com, Generator: SVG Repo Mixer Tools -->
+                                                    <svg width="800px" height="800px" viewBox="0 0 1024 1024"
+                                                        class="icon" version="1.1" xmlns="http://www.w3.org/2000/svg">
+                                                        <path
+                                                            d="M202.4 32c-34.4 0-61.6 28-61.6 61.6v812.8c0 34.4 28 61.6 61.6 61.6h681.6V32H202.4z"
+                                                            fill="#72B6D3" />
+                                                        <path
+                                                            d="M264 32h-61.6c-34.4 0-61.6 28-61.6 61.6v812.8c0 34.4 28 61.6 61.6 61.6H264V32z"
+                                                            fill="#090C10" />
+                                                        <path
+                                                            d="M195.2 848h686.4v116.8H195.2c-28.8 0-52.8-26.4-52.8-58.4s23.2-58.4 52.8-58.4z"
+                                                            fill="#FFFFFF" />
+                                                        <path
+                                                            d="M884 976.8H202.4c-38.4 0-69.6-31.2-69.6-69.6V93.6c0-38.4 31.2-69.6 69.6-69.6h681.6c4.8 0 8 3.2 8 8v936.8c0 4-4 8-8 8zM202.4 40c-29.6 0-53.6 24-53.6 53.6v812.8c0 29.6 24 53.6 53.6 53.6h673.6V40H202.4z"
+                                                            fill="#6A576D" />
+                                                        <path
+                                                            d="M140 914.4c-4.8 0-8-3.2-8-8V93.6c0-38.4 31.2-69.6 69.6-69.6H264c4.8 0 8 3.2 8 8v812.8c0 4.8-3.2 8-8 8h-61.6c-29.6 0-53.6 24-53.6 53.6-0.8 4.8-4 8-8.8 8zM202.4 40c-29.6 0-53.6 24-53.6 53.6v768c12.8-15.2 32-25.6 53.6-25.6H256V40h-53.6z"
+                                                            fill="#6A576D" />
+                                                        <path d="M260.8 898.4h47.2V992h-47.2z" fill="#F1ED7B" />
+                                                        <path
+                                                            d="M308 1000h-47.2c-4.8 0-8-3.2-8-8v-93.6c0-4.8 3.2-8 8-8h47.2c4.8 0 8 3.2 8 8V992c0 4.8-4 8-8 8z m-39.2-16h31.2v-77.6h-31.2v77.6z"
+                                                            fill="#6A576D" />
+                                                        <path
+                                                            d="M692 453.6H449.6c-34.4 0-62.4-28-62.4-62.4V281.6c0-34.4 28-62.4 62.4-62.4h242.4c34.4 0 62.4 28 62.4 62.4v109.6c0 34.4-28 62.4-62.4 62.4z"
+                                                            fill="#FFFFFF" />
+                                                        <path
+                                                            d="M692 461.6H449.6c-38.4 0-70.4-31.2-70.4-70.4V281.6c0-38.4 31.2-70.4 70.4-70.4h242.4c38.4 0 70.4 31.2 70.4 70.4v109.6c0 38.4-32 70.4-70.4 70.4zM449.6 227.2c-29.6 0-54.4 24-54.4 54.4v109.6c0 29.6 24 54.4 54.4 54.4h242.4c29.6 0 54.4-24 54.4-54.4V281.6c0-29.6-24-54.4-54.4-54.4H449.6zM884 852.8H264c-4.8 0-8-3.2-8-8s3.2-8 8-8h620c4.8 0 8 3.2 8 8s-4 8-8 8z"
+                                                            fill="#6A576D" />
+                                                    </svg>
+                                                </span>
+                                                <!--end::Svg Icon-->
+                                                <div class="ms-2">{{context.author.no_of_books}}
+                                                    <span class="text-muted fs-4 fw-semibold">Number of books</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!--end::Card body-->
+                                </div>
+                                <!--end::Card-->
+                            </div>
+                        </div>
+                        <!--begin::Card-->
+                        <div class="card pt-4 mb-6 mb-xl-9">
+                            <!--begin::Card header-->
+                            <div class="card-header align-items-center py-5 gap-2 gap-md-5">
+                                <!--begin::Card title-->
+                                <div class="card-title">
+                                    <!--begin::Search-->
+                                    <div class="d-flex align-items-center position-relative my-1">
+                                        <!--begin::Svg Icon | path: icons/duotune/general/gen021.svg-->
+                                        <span class="svg-icon svg-icon-1 position-absolute ms-4">
+                                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none"
+                                                xmlns="http://www.w3.org/2000/svg">
+                                                <rect opacity="0.5" x="17.0365" y="15.1223" width="8.15546" height="2"
+                                                    rx="1" transform="rotate(45 17.0365 15.1223)" fill="currentColor" />
+                                                <path
+                                                    d="M11 19C6.55556 19 3 15.4444 3 11C3 6.55556 6.55556 3 11 3C15.4444 3 19 6.55556 19 11C19 15.4444 15.4444 19 11 19ZM11 5C7.53333 5 5 7.53333 5 11C5 14.4667 7.53333 17 11 17C14.4667 17 17 14.4667 17 11C17 7.53333 14.4667 5 11 5Z"
+                                                    fill="currentColor" />
+                                            </svg>
+                                        </span>
+                                        <!--end::Svg Icon-->
+                                        <input type="text" data-kt-ecommerce-order-filter="search"
+                                            class="form-control form-control-solid w-250px ps-14"
+                                            placeholder="Search Books" />
+                                    </div>
+                                    <!--end::Search-->
+                                    <!--begin::Export buttons-->
+                                    <div id="kt_ecommerce_report_customer_orders_export" class="d-none"></div>
+                                    <!--end::Export buttons-->
+                                </div>
+                                <!--end::Card title-->
+                                <!--begin::Card toolbar-->
+                                <div class="card-toolbar flex-row-fluid justify-content-end gap-5">
+                                    <!--begin::Export dropdown-->
+                                    <button type="button" class="btn btn-light-primary" data-kt-menu-trigger="click"
+                                        data-kt-menu-placement="bottom-end">
+                                        <!--begin::Svg Icon | path: icons/duotune/arrows/arr078.svg-->
+                                        <span class="svg-icon svg-icon-2">
+                                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none"
+                                                xmlns="http://www.w3.org/2000/svg">
+                                                <rect opacity="0.3" x="12.75" y="4.25" width="12" height="2" rx="1"
+                                                    transform="rotate(90 12.75 4.25)" fill="currentColor" />
+                                                <path
+                                                    d="M12.0573 6.11875L13.5203 7.87435C13.9121 8.34457 14.6232 8.37683 15.056 7.94401C15.4457 7.5543 15.4641 6.92836 15.0979 6.51643L12.4974 3.59084C12.0996 3.14332 11.4004 3.14332 11.0026 3.59084L8.40206 6.51643C8.0359 6.92836 8.0543 7.5543 8.44401 7.94401C8.87683 8.37683 9.58785 8.34458 9.9797 7.87435L11.4427 6.11875C11.6026 5.92684 11.8974 5.92684 12.0573 6.11875Z"
+                                                    fill="currentColor" />
+                                                <path opacity="0.3"
+                                                    d="M18.75 8.25H17.75C17.1977 8.25 16.75 8.69772 16.75 9.25C16.75 9.80228 17.1977 10.25 17.75 10.25C18.3023 10.25 18.75 10.6977 18.75 11.25V18.25C18.75 18.8023 18.3023 19.25 17.75 19.25H5.75C5.19772 19.25 4.75 18.8023 4.75 18.25V11.25C4.75 10.6977 5.19771 10.25 5.75 10.25C6.30229 10.25 6.75 9.80228 6.75 9.25C6.75 8.69772 6.30229 8.25 5.75 8.25H4.75C3.64543 8.25 2.75 9.14543 2.75 10.25V19.25C2.75 20.3546 3.64543 21.25 4.75 21.25H18.75C19.8546 21.25 20.75 20.3546 20.75 19.25V10.25C20.75 9.14543 19.8546 8.25 18.75 8.25Z"
+                                                    fill="currentColor" />
+                                            </svg>
+                                        </span>
+                                        <!--end::Svg Icon-->Export</button>
+                                    <!--begin::Menu-->
+                                    <div id="kt_ecommerce_report_customer_orders_export_menu"
+                                        class="menu menu-sub menu-sub-dropdown menu-column menu-rounded menu-gray-600 menu-state-bg-light-primary fw-semibold fs-7 w-200px py-4"
+                                        data-kt-menu="true">
+                                        <!--begin::Menu item-->
+                                        <div class="menu-item px-3">
+                                            <a href="#" class="menu-link px-3" data-kt-ecommerce-export="copy">Copy
+                                                to clipboard</a>
+                                        </div>
+                                        <!--end::Menu item-->
+                                        <!--begin::Menu item-->
+                                        <div class="menu-item px-3">
+                                            <a href="#" class="menu-link px-3" data-kt-ecommerce-export="excel">Export
+                                                as Excel</a>
+                                        </div>
+                                        <!--end::Menu item-->
+                                        <!--begin::Menu item-->
+                                        <div class="menu-item px-3">
+                                            <a href="#" class="menu-link px-3" data-kt-ecommerce-export="csv">Export
+                                                as CSV</a>
+                                        </div>
+                                        <!--end::Menu item-->
+                                        <!--begin::Menu item-->
+                                        <div class="menu-item px-3">
+                                            <a href="#" class="menu-link px-3" data-kt-ecommerce-export="pdf">Export
+                                                as PDF</a>
+                                        </div>
+                                        <!--end::Menu item-->
+                                    </div>
+                                    <!--end::Menu-->
+                                    <!--end::Export dropdown-->
+                                </div>
+                                <!--end::Card toolbar-->
+                            </div>
+                            <!--end::Card header-->
+                            <!--begin::Card body-->
+                            <div class="card-body pt-0 pb-5">
+                                <!--begin::Table-->
+                                <table class="table align-middle table-row-dashed gy-5" id="datatable">
+                                    <!--begin::Table head-->
+                                    <thead class="border-bottom border-gray-200 fs-7 fw-bold">
+                                        <!--begin::Table row-->
+                                        <tr class="text-start text-muted text-uppercase gs-0">
+                                            <th class="min-w-100px">Book Title</th>
+                                            <th class="min-w-100px">Book Category</th>
+                                            <th class="min-w-100px">Author</th>
+                                            <th>Date Added</th>
+                                        </tr>
+                                        <!--end::Table row-->
+                                    </thead>
+                                    <!--end::Table head-->
+                                    <!--begin::Table body-->
+                                    <!--begin::Table body-->
+                                    <tbody class="fs-6 fw-semibold text-gray-600">
+
+                                        {% for book in context.author.books %}
+                                        <!--begin::Table row-->
+                                        <tr>
+                                            <td class="text-capitalize">{{book.title}}</td>
+                                            <td class="text-capitalize">{{book.category.name}}</td>
+                                            <td class="text-capitalize">{{book.author.firstname}} {{book.author.lastname}}</td>
+                                            <td>{{book.date_added}}</td>
+                                        </tr>
+                                        <!--end::Table row-->
+                                        {% endfor %}
+                                    </tbody>
+
+                                    <!--end::Table body-->
+                                </table>
+                                <!--end::Table-->
+                            </div>
+                            <!--end::Card body-->
+                        </div>
+                        <!--end::Card-->
+                    </div>
+                    <!--end:::Tab pane-->
+                    <!--begin:::Tab pane-->
+                    <div class="tab-pane fade" id="kt_ecommerce_customer_general" role="tabpanel">
+                        <!--begin::Card-->
+                        <div class="card pt-4 mb-6 mb-xl-9">
+                            <!--begin::Card header-->
+                            <div class="card-header border-0">
+                                <!--begin::Card title-->
+                                <div class="card-title">
+                                    <h2>Profile</h2>
+                                </div>
+                                <!--end::Card title-->
+                            </div>
+                            <!--end::Card header-->
+                            <!--begin::Card body-->
+                            <div class="card-body pt-0 pb-5">
+                                <!--begin::Form-->
+                                <form class="form" id="kt_ecommerce_customer_profile" method="post">
+                                    <div class="flash-messages">
+                                        {% with messages = get_flashed_messages() %}
+                                        {% if messages %}
+                                        <ul class="flash">
+                                            {% for message in messages %}
+                                            <li class="{{ message.category }}">{{ message }}</li>
+                                            {% endfor %}
+                                        </ul>
+                                        {% endif %}
+                                        {% endwith %}
+                                    </div>
+                                
+                                    <div class="fv-row mb-7">
+                                        <!--begin::Label-->
+                                        <label class="fs-6 fw-semibold mb-2 ">First Name</label>
+                                        <!--end::Label-->
+                                        <!--begin::Input-->
+                                        <input type="text" class="form-control form-control-solid text-capitalize"
+                                            placeholder="{{context.author.firstname}}" name="firstname" />
+                                        <!--end::Input-->
+                                    </div>
+                                    <div class="fv-row mb-7">
+                                        <!--begin::Label-->
+                                        <label class="fs-6 fw-semibold mb-2 ">Last Name</label>
+                                        <!--end::Label-->
+                                        <!--begin::Input-->
+                                        <input type="text" class="form-control form-control-solid text-capitalize"
+                                            placeholder="{{context.author.lastname}}" name="lastname"  />
+                                        <!--end::Input-->
+                                    </div>
+                                    <!--end::Row-->
+                                    <div class="d-flex justify-content-between">
+                                        <!--begin::Button-->
+                                        <button type="submit" id="kt_ecommerce_customer_profile_submit"
+                                            class="btn btn-light-primary">
+                                            <span class="indicator-label">Save</span>
+                                        </button>
+                                        <a href="/author/{{context.author.id}}/?delete=true" class="btn btn-danger er fs-6 ">Delete Author</a>
+                                        </a>
+                                        <!--end::Button-->
+                                    </div>
+                                </form>
+                                <!--end::Form-->
+                            </div>
+                            <!--end::Card body-->
+                        </div>
+                        <!--end::Card-->
+                    </div>
+                    <!--end:::Tab pane-->
+                </div>
+                <!--end:::Tab content-->
+            </div>
+            <!--end::Content-->
+        </div>
+        <!--end::Layout-->
+    </div>
+    <!--end::Content container-->
+</div>
+<!--end::Content-->
+</div>
+<!--end::Content wrapper-->
+</div>
+<!--end:::Main-->
+</div>
+<!--end::Wrapper-->
+</div>
+<!--end::Page-->
+</div>
+<!--end::App-->
+{% endblock %}
+
+{% block scripts %}
+<script>var hostUrl = "assets";</script>
+<!--begin::Global Javascript Bundle(mandatory for all pages)-->
+<script src="{{ url_for('static', filename='plugins/global/plugins.bundle.js')}}"></script>
+<script src="{{ url_for('static', filename='js/scripts.bundle.js')}}"></script>
+<!--end::Global Javascript Bundle-->
+<!--begin::Vendors Javascript(used for this page only)-->
+<script src="{{ url_for('static', filename='plugins/custom/datatables/datatables.bundle.js')}}"></script>
+<!--end::Vendors Javascript-->
+<!--begin::Custom Javascript(used for this page only)-->
+<script src="{{ url_for('static', filename='js/widgets.bundle.js')}}"></script>
+<script src="{{ url_for('static', filename='js/custom/utilities/modals/upgrade-plan.js')}}"></script>
+<script src="{{ url_for('static', filename='js/custom/utilities/modals/create-campaign.js')}}"></script>
+<script src="{{ url_for('static', filename='js/custom/utilities/modals/users-search.js')}}"></script>
+<!--end::Custom Javascript-->
+<!--end::Javascript-->
+
+{% endblock %}
