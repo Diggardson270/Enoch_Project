@@ -145,7 +145,7 @@
                                 {% else %}
                                 <td>
                                     <div class="form-check form-check-sm form-check-custom form-check-solid">
-                                        <input class="form-check-input" type="checkbox" value="{{book.id}}" name="{{book.id}}" />
+                                        <input class="form-check-input" type="checkbox" value="{{book.id}}" name="{{book.id}}_selected" />
                                     </div>
                                 </td>
                                 {% endif %}
@@ -170,7 +170,7 @@
                                 </td>
                                 {% else %}
                                 <td>
-                                <textarea class="form-control form-control-flush mb-3 border border-4 border-success rounded" rows="2" data-kt-element="input" name="{{book.id}}_matirc_number" required placeholder="Enter students Matric numbers, Seperated by comma (,)"></textarea>
+                                <textarea class="form-control form-control-flush mb-3 border border-4 border-success rounded" rows="2" data-kt-element="input" name="{{book.id}}_matirc_number_items" required placeholder="Enter students Matric numbers, Seperated by comma (,)"></textarea>
                                 </td>
                                 {% endif %}
                                 <td>

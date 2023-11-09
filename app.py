@@ -502,6 +502,7 @@ def borrow_book(*args, **kwargs):
     selected_books = []
     not_found = []
     not_enough_in_stock = []
+    students_matirc_number_list = [student.matirc_number for student in students]  
     if request.args:
         if request.args.get("submit_method")== "use_qr_code":
             return "True"
@@ -509,31 +510,22 @@ def borrow_book(*args, **kwargs):
             if request.args.get("submit_method")== "input_manually":
             
                 if request.method =="POST": 
-                    length = len(request.form)
-                    selection = return_student_and_books(request.form, length)
+                    selection = return_student_and_books(request.form)
                     session_selection = []
                     for i in selection:
                         session_selection.append([i[0], str(i[1])])
                     session["selection"] = session_selection
                     for _book_id, _students in selection:
-                        selected_books.extend([book for book in books if book.id == _book_id])
-                        # for book in books:
-                        #     if book.id == _book_id:
-                        #         if book.no_of_stock < len(_students):
-                        #             not_enough_in_stock.append(book)
-                        #         else:
-                        #             selected_books.append(book)
-                            
-                        for student in students:  
-                            for index, matric_number in enumerate(_students):
-                                if matric_number == student.matirc_number:
-                                    selected_students.append(student)
-                                    _students.pop(index)
-                                    if matric_number in not_found:
-                                        not_found.remove(matric_number)
-                                    break
-                                not_found.append(matric_number)  
-                    not_found = remove_more_than_one_occurance(not_found)    
+                        selected_books.extend([book for book in books if book.id == int(_book_id)])
+                        for matric_number in _students:
+                            matric_number = matric_number.lower().strip()
+                            print(matric_number)
+                            if matric_number in students_matirc_number_list:
+                                student = Student.query.filter_by(matirc_number=matric_number).first()
+                                selected_students.append(student)
+                            # else:
+                            #     not_found.append(matric_number)  
+                    not_found = remove_more_than_one_occurance(not_found)  
                     selected_students = remove_more_than_one_occurance(selected_students)   
                     number_of_books = len(selected_books)   
                           
@@ -551,11 +543,11 @@ def borrow_book(*args, **kwargs):
                 }  
                 return render_template("select_book.html", context=book_page_context) 
             elif request.args.get("continue") == "True":
-                for i in session["selection"]:
-                    students = ast.literal_eval(i[1])
-                    book_id = i[0]
-                    borrowed_book = BorowedBook()
+                for book_id, students_selected in session["selection"]:
+                    students = remove_more_than_one_occurance([i.lower().strip() for i in ast.literal_eval(students_selected)])
+                    print(students)
                     for matirc_number in students:
+                        borrowed_book = BorowedBook()
                         student = Student.query.filter_by(matirc_number=matirc_number).first()
                         book = Book.query.get_or_404(book_id)
                         borrowed_book.book_id = book.id
@@ -563,9 +555,9 @@ def borrow_book(*args, **kwargs):
                             borrowed_book.student_id = student.id
                             borrowed_book.return_date = datetime.timedelta(days=book.no_of_borrowd_days) + datetime.datetime.now()
                             book.no_of_stock -= 1
-                        db.session.add(borrowed_book)
-                        db.session.commit()
-                        return redirect(url_for("get_and_create_books"))
+                            db.session.add(borrowed_book)
+                            db.session.commit()
+                return redirect(url_for("get_and_create_books"))
     return render_template("select_method.html") 
 
 
@@ -683,43 +675,18 @@ def remove_more_than_one_occurance(item):
     for x in item:
         if x not in new_list:
             new_list.append(x)
-        else:
-            continue
     return new_list
-        
 
-def return_student_and_books(to_sort, length):
-    to_sort = dict(to_sort)
+def return_student_and_books(form):
     main_list = []
-    def recursive_cursive(form_list, counter):
-        to_pop2 = 0
-        if counter != 0:
-            try:
-                index = int(list(form_list.keys())[counter-1])
-                for j in to_sort.keys():
-                    if j == str(index):
-                        pass
-                    else:
-                        to_pop2 = j
-                        matric_number = j.split("_")
-                        if matric_number[0] == str(index):
-                            new_list = [index, to_sort[j]]
-                            main_list.append(new_list)
-                            break
-                form_list.pop(str(index))
-                form_list.pop(to_pop2)
-            except ValueError:
-                pass
-            counter -=1                    
-            recursive_cursive(form_list, counter)
-    recursive_cursive(to_sort, length)
-    for j, selectioned in enumerate(main_list):
-        names = selectioned[1].split(",")
-        for i, x in enumerate(names):
-            x = x.strip()
-            names[i] = x
-        new_list = [selectioned[0], names]
-        main_list[j] = new_list
+    for i in form.keys():
+        if "_selected" in i:
+            book_id = str(i).removesuffix("_selected")
+            for students in form.keys():
+                if book_id in students:
+                    selcted_students = form.get(students).lower().strip().split(",")
+            new_list = [book_id, selcted_students]
+            main_list.append(new_list)
     return main_list
 
 if __name__ == "__main__":
