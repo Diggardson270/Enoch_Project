@@ -648,7 +648,7 @@ var KTCardsWidget17 = function () {
 
         // Init 
         drawCircle('#E4E6EF', options.lineWidth, 100 / 100); 
-        drawCircle(KTUtil.getCssVariableValue('--bs-primary'), options.lineWidth, 100 / 150);
+        drawCircle(KTUtil.getCssVariableValue('--bs-primary'), options.lineWidth, 100 / 250);
         drawCircle(KTUtil.getCssVariableValue('--bs-success'), options.lineWidth, 100 / 250);   
     }
 

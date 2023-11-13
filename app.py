@@ -1,10 +1,10 @@
-from cgi import print_arguments
 import os
-from flask import Flask, render_template, request, url_for, redirect, send_file, Response, session, flash, get_flashed_messages
+import bcrypt 
+from flask import Flask, render_template, request, url_for, redirect, send_file, Response, session, flash, get_flashed_messages, jsonify
 from flask_sqlalchemy import SQLAlchemy
 from typing import List
 from sqlalchemy.sql import func
-from sqlalchemy.orm.decl_api import DeclarativeMeta
+from dataclasses import dataclass
 from enum import StrEnum, Enum
 import datetime
 import qrcode
@@ -12,6 +12,8 @@ import secrets
 import json
 import ast
 import math
+from statistics import mean
+from functools import wraps
 
 
 
@@ -27,9 +29,28 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = True
 
 
 db = SQLAlchemy(app)
-main_ref_code = None
+
+app = Flask(__name__)
+app.secret_key = "8419c249452b7241d1f7f3da3e4f9df359af0a264a988d999d408406f0976788"
 
 
+basedir = os.path.abspath(os.path.dirname(__file__))
+
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + \
+    os.path.join(basedir, 'db.sqlite3')
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = True
+
+
+db = SQLAlchemy(app)
+
+
+def login_required(f):
+    @wraps(f)
+    def decorated_function(*args, **kwargs):
+        if "user" not in session:
+            return redirect(url_for('login'))
+        return f(*args, **kwargs)
+    return decorated_function
 
 
 
@@ -49,6 +70,15 @@ class StudentLevel(Enum):
     LEVEL_500 = "500"
 
 
+
+@dataclass
+class LoggedIn:
+    firstname: str = None
+    lastname: str = None
+    password: str = None
+    email: str = None
+    user_type: str = None
+
 class User(db.Model):
 
     # __tablename__ = "user"
@@ -57,10 +87,10 @@ class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     firstname = db.Column(db.String(100), nullable=False)
     lastname = db.Column(db.String(100), nullable=False)
+    password = db.Column(db.String, nullable=False)
     email = db.Column(db.String(80), unique=True, nullable=False)
     created_at = db.Column(db.DateTime(timezone=True),
                            server_default=func.now())
-    bio = db.Column(db.Text)
     user_type = db.Column(db.String(10), db.DefaultClause(UserType.ADMIN))
 
     # def __repr__(self):
@@ -68,6 +98,8 @@ class User(db.Model):
 
     # def __str__(self) -> str:
     #     return f'User {self.email}'
+
+
 
 
 
@@ -223,20 +255,50 @@ class BorowedBook(db.Model):
         days_left  =  self.return_date - self.borrowed_date  
         if days_left.days<0:
             return 	"0:00:00"
+        elif self.is_returened:
+            return None
         return f"{days_left.days} days"
     
     @property
     def return_date_cleaned(self):
-        return f"{self.return_date.year}-{self.return_date.month}-{self.return_date.day} {self.return_date.hour}:{self.return_date.minute}:{self.return_date.second}"
+        return f"{self.return_date.year}-{self.return_date.month}-{self.return_date.day} {self.return_date.hour}:{self.return_date.minute}"
     
         
         
 
-# @app.route("/", methods=["GET", "POST"])
-# def home(*args, **kwargs):
-#     return "Hello"
+@app.route("/", methods=["GET", "POST"])
+@login_required
+def home(*args, **kwargs):
+    books = Book.query.all()
+    borrowed = BorowedBook.query.filter_by(is_returened=False).all()
+    categories = Category.query.all()
+    # average_borrowed = round(mean([i.no_borrowed for i in books]))
+    # most_borrowes = [i for i in books if i.no_borrowed > average_borrowed]
+    # others = sum([i.no_borrowed for i in books if i.no_borrowed< average_borrowed])
+    no_of_books = sum([i.no_of_stock for i in books])
+    no_borrowed = len(BorowedBook.query.filter_by(is_returened=False).all())
+    # percentage = round((no_borrowed/no_of_books)*100)
+    borrowed.reverse()
+    recently_borrowed_books = borrowed[:6]
+    
+    
+    
+    context = {
+        "recently_borrowed_books":recently_borrowed_books,
+        "categories":categories,
+        "len_categories": len(categories),
+        "books":books, 
+        "no_of_books": no_of_books,
+        "no_borrowed": no_borrowed,
+        # "percentage":percentage,
+        # "most_borrowed" :most_borrowes,
+        # "others":others,
+        # "total_borrowes": others+sum([i.no_borrowed for i in most_borrowes])
+    }
+    return render_template("index.html", context=context)
 
 @app.route("/books/", methods=["GET", "POST"])
+@login_required
 def get_and_create_books():
     authors = Author.query.all()
     books = Book.query.all()
@@ -285,6 +347,7 @@ def get_and_create_books():
 
 
 @app.route("/book/<int:id>/", methods=["GET", "POST"])
+@login_required
 def book_detail_page(id , *args, **kwargs):
     book = Book.query.get_or_404(id)
     qr_code = book.slug
@@ -359,6 +422,7 @@ def book_detail_page(id , *args, **kwargs):
 
 
 @app.route("/students/", methods=["GET", "POST"])
+@login_required
 def get_and_create_student():
     students = Student.query.all()
     if request.method == "POST":
@@ -418,6 +482,7 @@ def get_and_create_student():
 
 
 @app.route("/student/<int:id>/", methods=["GET", "POST"])
+@login_required
 def student_detail_page(id, *args):
     student = Student.query.get_or_404(id)
     user = User.query.get_or_404(student.user_id)
@@ -493,6 +558,7 @@ def download_file(filename:str):
 
 
 @app.route("/borrow_book/", methods=["GET", "POST"])
+@login_required
 def borrow_book(*args, **kwargs):
     selection = []
     students = Student.query.all()
@@ -563,6 +629,7 @@ def borrow_book(*args, **kwargs):
 
 
 @app.route("/categories/", methods=["GET", "POST"])
+@login_required
 def get_and_create_category():
     categories = Category.query.all()
     if request.method == "POST":
@@ -592,6 +659,7 @@ def get_and_create_category():
 
 
 @app.route("/category/<int:id>/",  methods=["GET", "POST"])
+@login_required
 def category_detail_page(id, *args, **kwargs):
     category = Category.query.get_or_404(id)
     
@@ -618,6 +686,7 @@ def category_detail_page(id, *args, **kwargs):
 
 
 @app.route("/authors/", methods=["GET", "POST"])
+@login_required
 def get_and_create_author():
     authors = Author.query.all()
     if request.method == "POST":
@@ -646,6 +715,7 @@ def get_and_create_author():
 
 
 @app.route("/author/<int:id>/", methods=["GET", "POST"])
+@login_required
 def author_detail_page(id, *args):
     author = Author.query.get_or_404(id)
     
@@ -670,6 +740,140 @@ def author_detail_page(id, *args):
     }
     return render_template("authordetails.html", context=context)
 
+
+@app.route("/user/", methods=["GET", "POST"])
+def detail_page(*args):
+    return render_template("user.html")
+
+
+@app.route("/user/settings/", methods=["GET", "POST"])
+def user_settings_page(*args, **kwargs):
+    inputs_data = {}
+    new_session =  session["user"].copy()
+    user = User.query.filter_by(email=session["user"]["email"]).first()
+    if request.method == "POST":
+        if request.form.get("firstname")!= "" or request.form.get("lastname")!= "" or request.form.get("emailaddress") != "" or request.form.get("newpassword") != "":
+            if request.form.get("firstname"):
+                firstname = request.form.get("firstname")
+                inputs_data["firstname"] = firstname
+            if request.form.get("lastname"):
+                lastname = request.form.get("lastname")
+                inputs_data["lastname"] = lastname
+            if request.form.get("emailaddress"):
+                email = request.form.get("emailaddress")
+                password = request.form.get("confirmemailpassword")
+                if not check_password(password, user.password):
+                    flash("Invalid Password")
+                inputs_data["email"] = email
+                
+                    
+            if request.form.get("newpassword"):
+                newpassword = request.form.get("newpassword")
+                confirmpassword = request.form.get("confirmpassword")
+                currentpassword = request.form.get("currentpassword")
+                
+                if newpassword != confirmpassword:
+                    flash("Invalid Password")
+                
+                if not check_password(currentpassword, user.password):
+                    flash("Invalid Password")
+                inputs_data["password"] = generates_hash_password(newpassword)
+            
+            for key in inputs_data:
+                if hasattr(user, key):
+                    setattr(user, key, inputs_data[key])
+            
+            db.session.commit()
+            
+            for key in new_session:
+                if key in inputs_data:
+                    new_session[key] = inputs_data[key]
+                
+            session["user"] = new_session
+            
+        return redirect(url_for("user_settings_page"))
+            
+    return render_template("user_settings.html")
+
+
+
+@app.route("/login/", methods=["GET", "POST"])
+def login(*args, **kwargs):
+    if request.method =="POST":
+        email = request.form.get("email")
+        password = request.form.get("password")
+        user= User.query.filter_by(email=email).first()
+        if check_password(password, user.password):
+            logged = LoggedIn(**{field:vars(user).get(field) for field in vars(user) if field in vars(LoggedIn)})
+            session["user"] = vars(logged)
+            return redirect(url_for("home"))
+        flash("Invalid email or password", category=  "warning")
+    return render_template("login.html")
+
+
+
+@app.route("/logout/")
+@login_required
+def logout(*args, **kwargs):
+    session.pop("user", None)
+    return redirect(url_for("login"))
+
+
+@app.route("/sign_up/", methods=["GET", "POST"])
+def sign_up(*args, **kwargs):
+    if request.method == "POST":
+        email = request.form.get("email")
+        password = request.form.get("password")
+        firstname = request.form.get("firstname")
+        lastname = request.form.get("lastname")
+        
+        user = User()
+        user.email = email
+        user.password = generates_hash_password(password)
+        user.firstname = firstname.lower().strip()
+        user.lastname = lastname.lower().strip()
+        
+        db.session.add(user)
+        db.session.commit()
+        print("hello")
+        return redirect(url_for("login"))
+    return render_template("sign_up.html")
+
+@app.route("/forgot_password/", methods=["GET", "POST"])
+def forgot_password(*args, **kwargs):
+    return render_template("forgot_password.html")
+
+
+@app.route("/password_reset/", methods=["GET", "POST"])
+def password_reset(*args, **kwargs):
+    return render_template("password_reset.html")
+
+
+
+
+def check_password(enterd_password:str, hash_password:bytes):
+    
+    enterd_password_hash = enterd_password.encode("utf-8")
+    
+    return bcrypt.checkpw(enterd_password_hash, hash_password)
+    
+    
+def generates_hash_password(enterd_password:str):
+    
+    enterd_password_hash = enterd_password.encode("utf-8")
+    salt = bcrypt.gensalt()
+    
+    password_hash = bcrypt.hashpw(enterd_password_hash, salt)
+    
+    return password_hash
+    
+    
+    
+    
+def generates_random_password():
+    pass
+
+
 def remove_more_than_one_occurance(item):
     new_list = []
     for x in item:
@@ -688,6 +892,9 @@ def return_student_and_books(form):
             new_list = [book_id, selcted_students]
             main_list.append(new_list)
     return main_list
+
+
+
 
 if __name__ == "__main__":
     with app.app_context():
