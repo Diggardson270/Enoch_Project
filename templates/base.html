@@ -34,8 +34,8 @@ License: For each use you must have a valid license purchased only from above li
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inter:300,400,500,600,700" />
     <!--end::Fonts-->
     <!--begin::Vendor Stylesheets(used for this page only)-->
-    <link href="{{ url_for('static', filename='plugins/custom/fullcalendar/fullcalendar.bundle.css')}}"
-        rel="stylesheet" type="text/css" />
+    <link href="{{ url_for('static', filename='plugins/custom/fullcalendar/fullcalendar.bundle.css')}}" rel="stylesheet"
+        type="text/css" />
     <link href="{{ url_for('static', filename='plugins/custom/datatables/datatables.bundle.css')}}" rel="stylesheet"
         type="text/css" />
     <!--end::Vendor Stylesheets-->
@@ -79,8 +79,7 @@ License: For each use you must have a valid license purchased only from above li
                             <div class="menu menu-rounded menu-column menu-lg-row my-5 my-lg-0 align-items-stretch fw-semibold px-2 px-lg-0"
                                 id="kt_app_header_menu" data-kt-menu="true">
                                 <!--begin:Menu item-->
-                                <div 
-                                    class="menu-item  me-0 me-lg-2">
+                                <div class="menu-item  me-0 me-lg-2">
                                     <!--begin:Menu link-->
                                     <a href="/students/" class="menu-link">
                                         <span class="menu-title">Students</span>
@@ -89,18 +88,23 @@ License: For each use you must have a valid license purchased only from above li
                                 </div>
                                 <!--end:Menu item-->
                                 <!--begin:Menu item-->
-                                <div 
-                                    class="menu-item  me-0 me-lg-2">
+                                <div class="menu-item  me-0 me-lg-2">
                                     <!--begin:Menu link-->
                                     <a href="/books/" class="menu-link">
                                         <span class="menu-title">Books</span>
                                     </a>
                                     <!--end:Menu link-->
                                 </div>
+                                <div class="menu-item  me-0 me-lg-2">
+                                    <!--begin:Menu link-->
+                                    <a href="/authors/" class="menu-link">
+                                        <span class="menu-title">Authors</span>
+                                    </a>
+                                    <!--end:Menu link-->
+                                </div>
                                 <!--end:Menu item-->
                                 <!--begin:Menu item-->
-                                <div 
-                                    class="menu-item  me-0 me-lg-2">
+                                <div class="menu-item  me-0 me-lg-2">
                                     <!--begin:Menu link-->
                                     <a href="/categories/" class="menu-link">
                                         <span class="menu-title">Categories</span>
@@ -109,8 +113,7 @@ License: For each use you must have a valid license purchased only from above li
                                 </div>
                                 <!--end:Menu item-->
                                 <!--begin:Menu item-->
-                                <div 
-                                    class="menu-item  me-0 me-lg-2">
+                                <div class="menu-item  me-0 me-lg-2">
                                     <!--begin:Menu link-->
                                     <a href="/borrow_book/" class="menu-link">
                                         <span class="menu-title">Borrow</span>
@@ -140,7 +143,8 @@ License: For each use you must have a valid license purchased only from above li
                                         <div class="menu-content d-flex align-items-center px-3">
                                             <!--begin::Username-->
                                             <div class="d-flex flex-column">
-                                                <div class="fw-bold d-flex align-items-center fs-5 text-capitalize">{{session.user.firstname}} {{session.user.lastname}}
+                                                <div class="fw-bold d-flex align-items-center fs-5 text-capitalize">
+                                                    {{session.user.firstname}} {{session.user.lastname}}
                                                 </div>
                                                 <a href="#"
                                                     class="fw-semibold text-muted text-hover-primary fs-7">{{session.user.email}}</a>
@@ -162,8 +166,7 @@ License: For each use you must have a valid license purchased only from above li
                                     <!--end::Menu separator-->
                                     <!--begin::Menu item-->
                                     <div class="menu-item px-5">
-                                        <a href="/logout/"
-                                            class="menu-link px-5">Sign Out</a>
+                                        <a href="/logout/" class="menu-link px-5">Sign Out</a>
                                     </div>
                                     <!--end::Menu item-->
                                 </div>

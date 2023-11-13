@@ -3684,15 +3684,46 @@ var KTChartsWidget18 = function () {
         if (!element) {
             return;
         }
+
+
         
         var height = parseInt(KTUtil.css(element, 'height'));
         var labelColor = KTUtil.getCssVariableValue('--bs-gray-900');
         var borderColor = KTUtil.getCssVariableValue('--bs-border-dashed-color');    
 
+		var chart1Data = [];
+		var chartnames = []
+
+		fetch("http://127.0.0.1:8000/json_categories/")
+		.then(response => {
+			// Check if the request was successful (status code 200-299)
+			if (!response.ok) {
+			throw new Error(`HTTP error! Status: ${response.status}`);
+			}
+
+			// Parse the JSON response
+			return response.json();
+		})
+		.then(data => {
+			// Process the data from the API
+			data.forEach(obj => {
+			chart1Data.push(obj.no_of_books);
+			chartnames.push(obj.name);
+			});
+
+			// Now 'chart1Data' should contain the 'no_of_books' values from the API response
+			console.log(chart1Data);
+		})
+		.catch(error => {
+			// Handle errors
+			console.error('Error:', error);
+		});
+
+
         var options = {
             series: [{
-                name: 'Spent time',
-                data: [54, 42, 75, 110, 23, 87, 50]
+                name: 'Books under this category',
+                data: chart1Data
             }],
             chart: {
                 fontFamily: 'inherit',
@@ -3733,7 +3764,7 @@ var KTChartsWidget18 = function () {
                 colors: ['transparent']
             },
             xaxis: {
-                categories: ['QA Analysis', 'Marketing', 'Web Dev', 'Maths', 'Front-end Dev', 'Physics', 'Phylosophy'],
+                categories: chartnames,
                 axisBorder: {
                     show: false,
                 },
@@ -3796,7 +3827,7 @@ var KTChartsWidget18 = function () {
                 },
                 y: {
                     formatter: function (val) {
-                        return  + val + ' hours' 
+                        return  + val + ' books' 
                     }
                 } 
             },

@@ -272,14 +272,23 @@ def home(*args, **kwargs):
     books = Book.query.all()
     borrowed = BorowedBook.query.filter_by(is_returened=False).all()
     categories = Category.query.all()
-    # average_borrowed = round(mean([i.no_borrowed for i in books]))
-    # most_borrowes = [i for i in books if i.no_borrowed > average_borrowed]
-    # others = sum([i.no_borrowed for i in books if i.no_borrowed< average_borrowed])
     no_of_books = sum([i.no_of_stock for i in books])
     no_borrowed = len(BorowedBook.query.filter_by(is_returened=False).all())
-    # percentage = round((no_borrowed/no_of_books)*100)
     borrowed.reverse()
     recently_borrowed_books = borrowed[:6]
+    average_borrowed   = 0
+    most_borrowes  = 0
+    others = 0
+    percentage = 0
+    total_borrowes = 0
+    
+    if len(books) > 0:
+        average_borrowed = round(mean([i.no_borrowed for i in books]))
+        most_borrowes = [i for i in books if i.no_borrowed > average_borrowed]
+        others = sum([i.no_borrowed for i in books if i.no_borrowed< average_borrowed])
+        percentage = round((no_borrowed/no_of_books)*100)
+        total_borrowes = others+sum([i.no_borrowed for i in most_borrowes])
+        
     
     
     
@@ -287,13 +296,13 @@ def home(*args, **kwargs):
         "recently_borrowed_books":recently_borrowed_books,
         "categories":categories,
         "len_categories": len(categories),
-        "books":books, 
+        "books":books[:6], 
         "no_of_books": no_of_books,
         "no_borrowed": no_borrowed,
-        # "percentage":percentage,
-        # "most_borrowed" :most_borrowes,
-        # "others":others,
-        # "total_borrowes": others+sum([i.no_borrowed for i in most_borrowes])
+        "percentage":percentage,
+        "most_borrowed" :most_borrowes,
+        "others":others,
+        "total_borrowes": total_borrowes
     }
     return render_template("index.html", context=context)
 
@@ -849,6 +858,18 @@ def password_reset(*args, **kwargs):
     return render_template("password_reset.html")
 
 
+@app.route("/json_categories/", methods=["GET"])
+def request_categories():
+    data = []
+    categories = Category.query.all()
+    for category in categories:
+        new_data = {
+            "name": category.name,
+            "no_of_books": len(category.books)
+        }
+        data.append(new_data)
+        
+    return jsonify(data)
 
 
 def check_password(enterd_password:str, hash_password:bytes):

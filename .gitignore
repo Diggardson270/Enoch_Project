@@ -6,3 +6,4 @@ __pycache__
 .git/
 templates/test.html
 static/js/widgets.bundle.js
+*.png
