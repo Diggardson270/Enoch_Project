@@ -49,19 +49,6 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = True
 
 db = SQLAlchemy(app)
 
-app = Flask(__name__)
-app.secret_key = "8419c249452b7241d1f7f3da3e4f9df359af0a264a988d999d408406f0976788"
-
-
-basedir = os.path.abspath(os.path.dirname(__file__))
-
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + \
-    os.path.join(basedir, 'db.sqlite3')
-app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = True
-
-
-db = SQLAlchemy(app)
-
 
 def login_required(func):
     @wraps(func)
@@ -1193,7 +1180,7 @@ def get_and_create_liberian():
                 }
                 data= jsonify(data).json
                 data = json.dumps(data)
-                encrypted_data = encrypt_data(data, encrypt_key)
+                encrypted_data = encrypt_data(data, encrypt_key.encode())
                 body = f"Your Account has been created, follow this link to rest your password \n http://127.0.0.1:8000/reset_password/?data={encrypted_data.decode('utf-8')}"
                 # Send password reset email
                 yag.send(
