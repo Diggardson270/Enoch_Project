@@ -863,13 +863,13 @@ def login(*args, **kwargs):
         email = request.form.get("email")
         password = request.form.get("password")
         user= User.query.filter_by(email=email).first()
-        if user is None:
-            flash("This account does not exist", category=  "warning")            
-        if check_password(password, user.password):
-            logged = LoggedIn(**{field:vars(user).get(field) for field in vars(user) if field in vars(LoggedIn)})
-            session["user"] = vars(logged)
-            return redirect(url_for("home"))
-        flash("Invalid email or password", category=  "warning")
+        if user != None: 
+            if check_password(password, user.password):
+                logged = LoggedIn(**{field:vars(user).get(field) for field in vars(user) if field in vars(LoggedIn)})
+                session["user"] = vars(logged)
+                return redirect(url_for("home"))
+            flash("Invalid email or password", category=  "warning")
+        flash("This account does not exist", category=  "warning")           
     return render_template("login.html")
 
 
