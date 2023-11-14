@@ -43,7 +43,7 @@
                             <div class="text-center ">
                                 <!--begin::Action-->
                                 <a href="#" class="btn btn-primary er fs-6 " data-bs-toggle="modal"
-                                    data-bs-target="#kt_modal_new_target">Add Author</a>
+                                    data-bs-target="#kt_modal_new_target">Add Librarian</a>
                                 <!--end::Action-->
                             </div>
                             <!--end::Heading-->
@@ -111,9 +111,11 @@
                     <thead>
                         <!--begin::Table row-->
                         <tr class="text-start text-gray-400 fw-bold fs-7 text-uppercase gs-0">
-                            <th class="min-w-100px">Author
+                            <th class="min-w-100px">Librarian Name</th>
                             </th>
-                            <th class="min-w-100px">Number of Books</th>
+                            <th class="min-w-100px">Email</th>
+                            </th>
+                            
                         </tr>
                         <!--end::Table row-->
                     </thead>
@@ -122,15 +124,16 @@
 
                     <!--begin::Table body-->
                     <tbody class="fw-semibold text-gray-600">
-                        {% for author in context.authors %}
+                        {% for librarian in context.librarians %}
                         <!--begin::Table row-->
                         <tr>
                             <td>
-                                <a href="/author/{{author.id}}/" class="text-dark text-capitalize text-hover-primary">{{author.firstname}}
-                                    {{author.lastname}}</a>
+                                <a href="/librarian/{{librarian.id}}/" class="text-dark text-capitalize text-hover-primary">{{librarian.firstname}}
+                                    {{librarian.lastname}}</a>
                             </td>
-                            <td class="text-dark text-hover-primary">
-                                {{author.no_of_books}}
+                            <td>
+                                <a  class="text-dark text-lowercase text-hover-primary">
+                                    {{librarian.email}}</a>
                             </td>
                             <!--end::No products=-->
                         </tr>
@@ -190,7 +193,7 @@
                     <!--begin::Heading-->
                     <div class="mb-13 text-center">
                         <!--begin::Title-->
-                        <h1 class="mb-3">Add a new Author</h1>
+                        <h1 class="mb-3">Add a new Librarian</h1>
                         <!--end::Title-->
                     </div>
                     <!--end::Heading-->
@@ -215,6 +218,17 @@
                         </label>
                         <!--endf::Label-->
                         <input type="text" class="form-control form-control-solid" placeholder="Doe" name="lastname" />
+                    </div>
+                    
+                    <div class="d-flex flex-column mb-8 fv-row">
+                        <!--begin::Label-->
+                        <label class="d-flex align-items-center fs-6 fw-semibold mb-2">
+                            <span class="required">Email</span>
+                            <i class="fas fa-exclamation-circle ms-2 fs-7" data-bs-toggle="tooltip"
+                                title="Specify a target name for future usage and reference"></i>
+                        </label>
+                        <!--endf::Label-->
+                        <input type="email" class="form-control form-control-solid" placeholder="email" name="email" />
                     </div>
                     <!--begin::Actions-->
                     <div class="text-center">

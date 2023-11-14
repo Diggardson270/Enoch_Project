@@ -102,6 +102,15 @@ License: For each use you must have a valid license purchased only from above li
                                     </a>
                                     <!--end:Menu link-->
                                 </div>
+                                {% if session.user.user_type == "admin" %}
+                                    <div class="menu-item  me-0 me-lg-2">
+                                        <!--begin:Menu link-->
+                                        <a href="/librarians/" class="menu-link">
+                                            <span class="menu-title">Librarians</span>
+                                        </a>
+                                        <!--end:Menu link-->
+                                    </div>
+                                {% endif %}
                                 <!--end:Menu item-->
                                 <!--begin:Menu item-->
                                 <div class="menu-item  me-0 me-lg-2">

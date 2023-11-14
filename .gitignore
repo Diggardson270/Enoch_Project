@@ -4,6 +4,7 @@ test.pyt
 db.sqlite3
 __pycache__
 .git/
+.env
 templates/test.html
 static/js/widgets.bundle.js
 *.png
