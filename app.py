@@ -652,7 +652,6 @@ def download_file(filename: str):
 @app.route("/borrow_book/", methods=["GET", "POST"])
 @login_required
 def borrow_book(*args, **kwargs):
-    # Initialize variables
     selection = []
     students = Student.query.all()
     books = Book.query.all()
@@ -661,70 +660,50 @@ def borrow_book(*args, **kwargs):
     selected_books = []
     not_found = []
     not_enough_in_stock = []
-    
-    # Get a list of all student matric numbers
-    students_matirc_number_list = [student.matirc_number for student in students]
-    
+    students_matirc_number_list = [student.matirc_number for student in students]  
     if request.args:
-        # If "submit_method" is set to "use_qr_code", redirect to "borrow_with_qr" route
-        if request.args.get("submit_method") == "use_qr_code":
-            return redirect(url_for("borrow_with_qr"))
+        if request.args.get("submit_method")== "use_qr_code":
+            return "True"
         else:
-            # If "submit_method" is set to "input_manually"
-            if request.args.get("submit_method") == "input_manually":
-                if request.method == "POST":
-                    # Get the selected student and books from the form
+            if request.args.get("submit_method")== "input_manually":
+            
+                if request.method =="POST": 
                     selection = return_student_and_books(request.form)
-                    
-                    # Store the selection in the session
-                    session_selection = [[i[0], str(i[1])] for i in selection]
+                    session_selection = []
+                    for i in selection:
+                        session_selection.append([i[0], str(i[1])])
                     session["selection"] = session_selection
-                    
-                    # Iterate over the selected books and students
                     for _book_id, _students in selection:
-                        # Add the selected books to the selected_books list
                         selected_books.extend([book for book in books if book.id == int(_book_id)])
-                        
-                        # Iterate over the matric numbers of the selected students
                         for matric_number in _students:
                             matric_number = matric_number.lower().strip()
+                            print(matric_number)
                             if matric_number in students_matirc_number_list:
-                                # If the matric number is found in the list, get the corresponding student object
                                 student = Student.query.filter_by(matirc_number=matric_number).first()
                                 selected_students.append(student)
                             # else:
-                            #     not_found.append(matric_number)
-                    
-                    # Remove duplicate entries from the not_found and selected_students lists
-                    not_found = remove_more_than_one_occurance(not_found)
-                    selected_students = remove_more_than_one_occurance(selected_students)
-                    
-                    # Get the number of selected books
-                    number_of_books = len(selected_books)
-                    
-                    # Create the context for the borrow_form template
+                            #     not_found.append(matric_number)  
+                    not_found = remove_more_than_one_occurance(not_found)  
+                    selected_students = remove_more_than_one_occurance(selected_students)   
+                    number_of_books = len(selected_books)   
+                          
                     borrow_form_context = {
-                        "books": selected_books,
-                        "students": selected_students,
-                        "number_of_books": number_of_books,
+                        "books":selected_books,
+                        "students":selected_students,
+                        "number_of_books":number_of_books,
                         "not_found": not_found,
-                        "not_enough_in_stock": not_enough_in_stock
+                        "not_enough_in_stock":not_enough_in_stock
                     }
-                    
-                    # Render the borrow_form template with the context
-                    return render_template("borrow_form.html", context=borrow_form_context)
-                
-                # If the request method is not POST, render the select_book template
+                    return render_template("borrow_form.html", context=borrow_form_context)  
                 book_page_context = {
-                    "books": books,
-                    "categories": categories
-                }
-                return render_template("select_book.html", context=book_page_context)
-            
-            # If "continue" is set to "True"
+                            "books":books,
+                            "categories":categories
+                }  
+                return render_template("select_book.html", context=book_page_context) 
             elif request.args.get("continue") == "True":
                 for book_id, students_selected in session["selection"]:
                     students = remove_more_than_one_occurance([i.lower().strip() for i in ast.literal_eval(students_selected)])
+                    print(students)
                     for matirc_number in students:
                         borrowed_book = BorowedBook()
                         student = Student.query.filter_by(matirc_number=matirc_number).first()
@@ -734,7 +713,13 @@ def borrow_book(*args, **kwargs):
                             borrowed_book.student_id = student.id
                             borrowed_book.return_date = datetime.timedelta(days=book.no_of_borrowd_days) + datetime.datetime.now()
                             book.no_of_stock -= 1
-                            db.session
+                            db.session.add(borrowed_book)
+                            db.session.commit()
+                return redirect(url_for("get_and_create_books"))
+    return render_template("select_method.html") 
+
+
+
 
 
 @app.route("/borrow/borrow_with_qr/", methods=["GET", "POST"])
