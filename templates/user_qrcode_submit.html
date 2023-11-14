@@ -1,0 +1,84 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<!--begin::Modal body-->
+<div class="d-flex flex-center flex-column flex-lg-row-fluid mt-10">
+    <div class="w-lg-500px p-10">
+        <!--begin:Form-->
+        <form class="form w-100" method="post">
+            <!--begin::Heading-->
+            <div class="mb-13 text-center">
+                <!--begin::Title-->
+                <h1 class="mb-3">User Info</h1>
+                <!--end::Title-->
+            </div>
+            <!--end::Heading-->
+            <!--begin::Input group-->
+            <div class="d-flex flex-column mb-8 fv-row">
+                <!--begin::Label-->
+                <label class="d-flex align-items-center fs-6 fw-semibold mb-2">
+                    <span class="required">Firstname</span>
+                </label>
+                <!--end::Label-->
+                <input type="text" class="form-control form-control-solid" 
+                    value="{{context.student.user.firstname}}" readonly />
+            </div>
+            <!--begin::Actions-->
+                <!--begin::Input group-->
+                <div class="d-flex flex-column mb-8 fv-row">
+                    <!--begin::Label-->
+                    <label class="d-flex align-items-center fs-6 fw-semibold mb-2">
+                        <span class="required">Lastname</span>
+                    </label>
+                    <!--end::Label-->
+                    <input type="text" class="form-control form-control-solid" readonly
+                        name="lastname" value="{{context.student.user.lastname}}"/>
+                </div>
+                <!--begin::Actions-->
+                    <!--begin::Input group-->
+            <div class="d-flex flex-column mb-8 fv-row">
+                <!--begin::Label-->
+                <label class="d-flex align-items-center fs-6 fw-semibold mb-2">
+                    <span class="required">Email</span>
+                </label>
+                <!--end::Label-->
+                <input type="email" class="form-control form-control-solid" readonly
+                    name="email" value="{{context.student.user.email}}"/>
+            </div>
+            <div class="d-flex flex-column mb-8 fv-row">
+                <!--begin::Label-->
+                <label class="d-flex align-items-center fs-6 fw-semibold mb-2">
+                    <span class="required">Matric Number</span>
+                </label>
+                <!--end::Label-->
+                <input type="text" class="form-control form-control-solid" readonly
+                    name="matric_number" value="{{context.student.matirc_number}}"/>
+            </div>
+            <div class="d-flex flex-column mb-8 fv-row">
+                <!--begin::Label-->
+                <label class="d-flex align-items-center fs-6 fw-semibold mb-2">
+                    <span class="required">Number of Books pending</span>
+                </label>
+                <!--end::Label-->
+                <input type="number" class="form-control form-control-solid" readonly
+                    name="pending" value="{{context.no_of_pending_books}}"/>
+            </div>
+            <!--begin::Actions-->
+            <div class="text-center">
+                <button type="reset" id="kt_modal_new_target_cancel" class="btn btn-light me-3">Cancel</button>
+                <button type="submit" id="kt_modal_new_target_submit" class="btn btn-primary">
+                    <span class="indicator-label">Continue</span>
+                    <span class="indicator-progress">Please wait...
+                        <span class="spinner-border spinner-border-sm align-middle ms-2"></span></span>
+                </button>
+            </div>
+            <!--end::Actions-->
+        </form>
+        <!--end:Form-->
+    </div>
+    <!--end::Modal body-->
+
+</div>
+
+    {% endblock %}

@@ -445,6 +445,7 @@ def get_and_create_student():
         user.firstname = first_name.lower().strip()
         user.lastname = last_name.lower().strip()
         user.email = email
+        user.password = "nill"
         user.user_type = UserType.STUDENT
         
         
@@ -580,7 +581,7 @@ def borrow_book(*args, **kwargs):
     students_matirc_number_list = [student.matirc_number for student in students]  
     if request.args:
         if request.args.get("submit_method")== "use_qr_code":
-            return "True"
+            return redirect(url_for("borrow_with_qr"))
         else:
             if request.args.get("submit_method")== "input_manually":
             
@@ -634,6 +635,44 @@ def borrow_book(*args, **kwargs):
                             db.session.commit()
                 return redirect(url_for("get_and_create_books"))
     return render_template("select_method.html") 
+
+
+@app.route("/borrow/borrow_with_qr/", methods=["GET", "POST"])
+def borrow_with_qr(*args, **kwargs):
+    if request.args.get("user_id") and request.args.get("book_title"):
+        session.pop("user_id", None)
+        student = Student.query.filter_by(user_id = request.args.get("user_id")).first()
+        book = Book.query.filter_by(title = request.args.get("book_title")).first()
+        
+        if student and book:
+            if request.method == "POST":
+                borrow_book = BorowedBook()
+                borrow_book.book_id = book.id
+                borrow_book.student_id = student.id
+                db.session.add(borrow_book)
+                db.session.commit()
+                return redirect(url_for("home"))
+        context = {
+            "student": student,
+            "book":book,
+            "no_of_pending_books": len([book for book in student.books_borrowed if book.is_returned == False])
+        }
+        return render_template("book_qrcode_submit.html", context=context)
+        
+    elif request.args.get("user_id") is not None:
+        
+        student = Student.query.filter_by(user_id = request.args.get("user_id")).first()
+        if student:
+            session["user_id"] = student.user_id
+            if request.method == "POST":
+                return redirect(url_for("scan"))
+        context = {
+            "student": student,
+            "no_of_pending_books": len([book for book in student.books_borrowed if book.is_returned == False])
+        }
+        return render_template("user_qrcode_submit.html", context=context)
+    
+    return redirect(url_for("scan"))
 
 
 
@@ -872,6 +911,19 @@ def request_categories():
     return jsonify(data)
 
 
+@app.route("/scan/", methods=["GET", "POST"])
+def scan(*args, **kwargs):
+    return render_template("scan.html")
+
+
+@app.route("/clean_data/", methods=["GET", "POST"])
+def clean_and_return_id(*args, **kwargs):
+    data = request.args.get("data").strip()
+    result = ast.literal_eval(data)
+    if "title" in result:
+        return redirect(f"/borrow/borrow_with_qr/?user_id={session['user_id']}&book_title={result['title']}")
+    return redirect(f"/borrow/borrow_with_qr/?user_id={result['user id']}")
+
 def check_password(enterd_password:str, hash_password:bytes):
     
     enterd_password_hash = enterd_password.encode("utf-8")
@@ -922,7 +974,7 @@ if __name__ == "__main__":
 
         db.create_all()
 
-    app.run(port=8000, debug=True)
+    app.run(port=8000, debug=True)#, host="0.0.0.0")
 
 
 

@@ -7,3 +7,6 @@ __pycache__
 templates/test.html
 static/js/widgets.bundle.js
 *.png
+*.png
+*.png
+*.png
