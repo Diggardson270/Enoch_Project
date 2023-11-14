@@ -55,6 +55,17 @@ def login_required(f):
 
 
 
+def admin_required(f):
+    @wraps(f)
+    def decorated_function(*args, **kwargs):
+        if "user"in session:
+            if session["user"]["user_type"] == UserType.ADMIN:
+                return f(*args, **kwargs)
+    return decorated_function
+
+
+
+
 class UserType(StrEnum):
     ADMIN = "admin"
     LIBERIAN = "liberian"
@@ -92,6 +103,7 @@ class User(db.Model):
     created_at = db.Column(db.DateTime(timezone=True),
                            server_default=func.now())
     user_type = db.Column(db.String(10), db.DefaultClause(UserType.ADMIN))
+    is_verified = db.Column(db.Boolean,default=False,server_default="False", nullable=False)
 
     # def __repr__(self):
     #     return f'<Student {self.firstname}>'
@@ -644,7 +656,7 @@ def borrow_with_qr(*args, **kwargs):
         student = Student.query.filter_by(user_id = request.args.get("user_id")).first()
         book = Book.query.filter_by(title = request.args.get("book_title")).first()
         
-        if student and book:
+        if student is not None and book is not None:
             if request.method == "POST":
                 borrow_book = BorowedBook()
                 borrow_book.book_id = book.id
@@ -652,25 +664,25 @@ def borrow_with_qr(*args, **kwargs):
                 db.session.add(borrow_book)
                 db.session.commit()
                 return redirect(url_for("home"))
-        context = {
-            "student": student,
-            "book":book,
-            "no_of_pending_books": len([book for book in student.books_borrowed if book.is_returned == False])
-        }
-        return render_template("book_qrcode_submit.html", context=context)
+            context = {
+                "student": student,
+                "book":book,
+                "no_of_pending_books": len([book for book in student.books_borrowed if book.is_returned == False])
+            }
+            return render_template("book_qrcode_submit.html", context=context)
         
     elif request.args.get("user_id") is not None:
         
         student = Student.query.filter_by(user_id = request.args.get("user_id")).first()
-        if student:
+        if student is not None:
             session["user_id"] = student.user_id
             if request.method == "POST":
                 return redirect(url_for("scan"))
-        context = {
-            "student": student,
-            "no_of_pending_books": len([book for book in student.books_borrowed if book.is_returned == False])
-        }
-        return render_template("user_qrcode_submit.html", context=context)
+            context = {
+                "student": student,
+                "no_of_pending_books": len([book for book in student.books_borrowed if book.is_returned == False])
+            }
+            return render_template("user_qrcode_submit.html", context=context)
     
     return redirect(url_for("scan"))
 
@@ -851,6 +863,8 @@ def login(*args, **kwargs):
         email = request.form.get("email")
         password = request.form.get("password")
         user= User.query.filter_by(email=email).first()
+        if user is None:
+            flash("This account does not exist", category=  "warning")            
         if check_password(password, user.password):
             logged = LoggedIn(**{field:vars(user).get(field) for field in vars(user) if field in vars(LoggedIn)})
             session["user"] = vars(logged)
@@ -961,6 +975,7 @@ if __name__ == "__main__":
             user.firstname = "admin"
             user.lastname = "admin"
             user.user_type = UserType.ADMIN
+            user.is_verified = True
             db.session.add(user)
             db.session.commit()
 
