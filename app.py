@@ -867,26 +867,6 @@ def logout(*args, **kwargs):
     return redirect(url_for("login"))
 
 
-@app.route("/sign_up/", methods=["GET", "POST"])
-def sign_up(*args, **kwargs):
-    if request.method == "POST":
-        email = request.form.get("email")
-        password = request.form.get("password")
-        firstname = request.form.get("firstname")
-        lastname = request.form.get("lastname")
-        
-        user = User()
-        user.email = email
-        user.password = generates_hash_password(password)
-        user.firstname = firstname.lower().strip()
-        user.lastname = lastname.lower().strip()
-        
-        db.session.add(user)
-        db.session.commit()
-        print("hello")
-        return redirect(url_for("login"))
-    return render_template("sign_up.html")
-
 @app.route("/forgot_password/", methods=["GET", "POST"])
 def forgot_password(*args, **kwargs):
     return render_template("forgot_password.html")
@@ -973,6 +953,16 @@ if __name__ == "__main__":
     with app.app_context():
 
         db.create_all()
+        user = User.query.filter_by(email="admin@admin.com").first()
+        if user is None:
+            user = User()
+            user.email = "admin@admin.com"
+            user.password = generates_hash_password("admin")
+            user.firstname = "admin"
+            user.lastname = "admin"
+            user.user_type = UserType.ADMIN
+            db.session.add(user)
+            db.session.commit()
 
     app.run(port=8000, debug=True)#, host="0.0.0.0")
 
