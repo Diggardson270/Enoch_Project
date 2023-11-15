@@ -43,7 +43,7 @@
                             <div class="text-center ">
                                 <!--begin::Action-->
                                 <a href="#" class="btn btn-primary er fs-6 " data-bs-toggle="modal"
-                                    data-bs-target="#kt_modal_new_target">Add Student</a>
+                                    data-bs-target="#kt_modal_new_target">Add a new Department</a>
                                 <!--end::Action-->
                             </div>
                             <!--end::Heading-->
@@ -111,11 +111,9 @@
                     <thead>
                         <!--begin::Table row-->
                         <tr class="text-start text-gray-400 fw-bold fs-7 text-uppercase gs-0">
-                            <th class="min-w-100px">Student
+                            <th class="min-w-100px">Name
                             </th>
-                            <th class="min-w-100px">Email</th>
-
-                            <th class="min-w-100px">Date Added</th>
+                            <th class="min-w-100px">Number of Students</th>
                         </tr>
                         <!--end::Table row-->
                     </thead>
@@ -124,19 +122,14 @@
 
                     <!--begin::Table body-->
                     <tbody class="fw-semibold text-gray-600">
-                        {% for student in context.students %}
+                        {% for department in context.departments %}
                         <!--begin::Table row-->
                         <tr>
                             <td>
-                                <a href="/student/{{student.id}}/" class="text-dark text-capitalize text-hover-primary">{{student.user.firstname}}
-                                    {{student.user.lastname}}</a>
+                                <a href="/department/{{department.id}}/" class="text-dark text-capitalize text-hover-primary">{{department.name}}</a>
                             </td>
                             <td class="text-dark text-hover-primary">
-                                {{student.user.email}}
-                            </td>
-
-                            <td class="text-dark text-hover-primary">
-                                {{student.user.created_at}}
+                                {{department.number_of_students}}
                             </td>
                             <!--end::No products=-->
                         </tr>
@@ -187,7 +180,7 @@
                             {% if messages %}
                                 <ul class="flash">
                                     {% for message in messages %}
-                                        <li class="{{ message.category }}">{{ message }}</li>
+                                        <li class="{{ message.department }}">{{ message }}</li>
                                     {% endfor %}
                                 </ul>
                             {% endif %}
@@ -196,7 +189,7 @@
                     <!--begin::Heading-->
                     <div class="mb-13 text-center">
                         <!--begin::Title-->
-                        <h1 class="mb-3">Add a new Student</h1>
+                        <h1 class="mb-3">Add a new Department</h1>
                         <!--end::Title-->
                     </div>
                     <!--end::Heading-->
@@ -204,79 +197,14 @@
                     <div class="d-flex flex-column mb-8 fv-row">
                         <!--begin::Label-->
                         <label class="d-flex align-items-center fs-6 fw-semibold mb-2">
-                            <span class="required">Firstname</span>
+                            <span class="required">Department Name</span>
                             <i class="fas fa-exclamation-circle ms-2 fs-7" data-bs-toggle="tooltip"
                                 title="Specify a target name for future usage and reference"></i>
                         </label>
                         <!--endf::Label-->
-                        <input type="text" class="form-control form-control-solid" placeholder="John"
-                            name="first_name" />
+                        <input type="text" class="form-control form-control-solid" placeholder="Mechanical"
+                            name="name" />
                     </div>
-                    <div class="d-flex flex-column mb-8 fv-row">
-                        <!--begin::Label-->
-                        <label class="d-flex align-items-center fs-6 fw-semibold mb-2">
-                            <span class="required">Lastname</span>
-                            <i class="fas fa-exclamation-circle ms-2 fs-7" data-bs-toggle="tooltip"
-                                title="Specify a target name for future usage and reference"></i>
-                        </label>
-                        <!--endf::Label-->
-                        <input type="text" class="form-control form-control-solid" placeholder="Doe" name="last_name" />
-                    </div>
-                    <div class="d-flex flex-column mb-8 fv-row">
-                        <!--begin::Label-->
-                        <label class="d-flex align-items-center fs-6 fw-semibold mb-2">
-                            <span class="required">Email</span>
-                            <i class="fas fa-exclamation-circle ms-2 fs-7" data-bs-toggle="tooltip"
-                                title="Specify a target name for future usage and reference"></i>
-                        </label>
-                        <!--endf::Label-->
-                        <input type="email" class="form-control form-control-solid" placeholder="student@example.com"
-                            name="email" />
-                    </div>
-                    <div class="d-flex flex-column mb-8 fv-row">
-                        <!--begin::Label-->
-                        <label class="d-flex align-items-center fs-6 fw-semibold mb-2">
-                            <span class="required">Matriculation Number</span>
-                            <i class="fas fa-exclamation-circle ms-2 fs-7" data-bs-toggle="tooltip"
-                                title="Specify a target name for future usage and reference"></i>
-                        </label>
-                        <!--endf::Label-->
-                        <input type="text" class="form-control form-control-solid" placeholder="Doe" name="matric_number" maxlength="10"/>
-                    </div>
-                    <div class="d-flex flex-column mb-8 fv-row">
-                        <!--begin::Col-->
-                        <label class="required fs-6 fw-semibold mb-2">Level</label>
-                        <select class="form-select form-select-solid" data-control="select2" data-hide-search="true"
-                            data-placeholder="Select student level" name="student_level">
-                            <option value="">Select level...</option>
-                            <option value="{{context.levels.LEVEL_100.value}}">
-                                {{context.levels.LEVEL_100.value}}</option>
-                            <option value="{{context.levels.LEVEL_200.value}}">
-                                {{context.levels.LEVEL_200.value}}</option>
-                            <option value="{{context.levels.LEVEL_300.value}}">
-                                {{context.levels.LEVEL_300.value}}</option>
-                            <option value="{{context.levels.LEVEL_400.value}}">
-                                {{context.levels.LEVEL_400.value}}</option>
-                            <option value="{{context.levels.LEVEL_500.value}}">
-                                {{context.levels.LEVEL_500.value}}</option>
-                        </select>
-                        <!--end::Col-->
-                    </div>
-                    <!--end::Input group-->
-                     <!--begin::Input group-->
-                     <div class="d-flex flex-column mb-8 fv-row">
-                        <!--begin::Col-->
-                        <label class="required fs-6 fw-semibold mb-2">Department</label>
-                        <select class="form-select form-select-solid" data-control="select2" data-hide-search="true"
-                            data-placeholder="Select student department" name="department">
-                            <option value="">Select department...</option>
-                            {% for department in context.departments %}
-                            <option value="{{department.id}}">{{department.name}}</option>
-                            {% endfor %}
-                        </select>
-                        <!--end::Col-->
-                    </div>
-                    <!--end::Input group-->
                     <!--begin::Actions-->
                     <div class="text-center">
                         <button type="reset" id="kt_modal_new_target_cancel" class="btn btn-light me-3">Cancel</button>

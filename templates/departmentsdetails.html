@@ -6,76 +6,6 @@
     <div id="kt_app_content_container" class="app-container container-xxl">
         <!--begin::Layout-->
         <div class="d-flex flex-column flex-xl-row">
-            <!--begin::Sidebar-->
-            <div class="flex-column flex-lg-row-auto w-100 w-xl-350px my-15">
-                <!--begin::Card-->
-                <div class="card mb-5 mb-xl-8">
-                    <!--begin::Card body-->
-                    <div class="card-body pt-15">
-                        <!--begin::Summary-->
-                        <div class="d-flex flex-center flex-column mb-5">
-                            <!--begin::Avatar-->
-                            <div class="symbol symbol-150px symbol-circle mb-7">
-                                <img src="{{context.qr_code}}" alt="{{context.student.user.email}} qrcode" />
-                            </div>
-                            <!--end::Avatar-->
-                            <!--begin::Name-->
-                            <a href="#"
-                                class="fs-3 text-gray-800 text-capitalize text-hover-primary fw-bold mb-1">{{context.student.user.firstname}}
-                                {{context.student.user.lastname}}</a>
-                            <!--end::Name-->
-
-                        </div>
-                        <!--end::Summary-->
-                        <!--begin::Details toggle-->
-                        <div class="d-flex flex-stack fs-4 py-3">
-                            <div class="fw-bold">Details</div>
-                            <!--begin::Badge-->
-                            <div class="badge badge-light-info d-inline">ID {{context.student.id}}</div>
-                            <!--begin::Badge-->
-                        </div>
-                        <!--end::Details toggle-->
-                        <div class="separator separator-dashed my-3"></div>
-                        <!--begin::Details content-->
-                        <div class="pb-5 fs-6">
-                            <!--begin::Details item-->
-                            <div class="fw-bold mt-5">Student Name</div>
-                            <div class="text-gray-600 text-capitalize">{{context.student.user.firstname}}
-                                {{context.student.user.lastname}}</div>
-                            <!--begin::Details item-->
-                            <!--begin::Details item-->
-                            <div class="fw-bold mt-5">Email</div>
-                            <div class="text-gray-600">
-                                <a href="#"
-                                    class="text-gray-600 text-hover-primary text-capitalize">{{context.student.user.email}}</a>
-                            </div>
-
-                        </div>
-                        <div class="pb-5 fs-6">
-                            <!--begin::Details item-->
-                            <div class="fw-bold mt-5">Matriculation Number</div>
-                            <div class="text-gray-600 text-uppercase">{{context.student.matirc_number}}</div>
-                            <!--begin::Details item-->
-                        </div>
-                        <div class="pb-5 fs-6">
-                            <!--begin::Details item-->
-                            <div class="fw-bold mt-5">Student Level</div>
-                            <div class="text-gray-600 text-capitalize">{{context.student.student_level}}</div>
-                            <!--begin::Details item-->
-                        </div>
-                        <div class="pb-5 fs-6">
-                            <!--begin::Details item-->
-                            <div class="fw-bold mt-5">Student Department</div>
-                            <div class="text-gray-600 text-capitalize">{{context.student.department.name}}</div>
-                            <!--begin::Details item-->
-                        </div>
-                        <!--end::Details content-->
-                    </div>
-                    <!--end::Card body-->
-                </div>
-                <!--end::Card-->
-            </div>
-            <!--end::Sidebar-->
             <!--begin::Content-->
             <div class="flex-lg-row-fluid ms-lg-15 mt-15">
                 <!--begin:::Tabs-->
@@ -106,7 +36,7 @@
                                     <div class="card-header border-0">
                                         <!--begin::Card title-->
                                         <div class="card-title">
-                                            <h2 class="fw-bold">Borrowed</h2>
+                                            <h2 class="fw-bold text-capitalize">Department: {{context.department.name}}</h2>
                                         </div>
                                         <!--end::Card title-->
                                     </div>
@@ -149,9 +79,8 @@
                                                     </svg>
                                                 </span>
                                                 <!--end::Svg Icon-->
-                                                <div class="ms-2">{{context.student.number_of_not_returned_books}}
-                                                    <span class="text-muted fs-4 fw-semibold">Books currently
-                                                        borrowed</span>
+                                                <div class="ms-2">{{context.department.number_of_students}}
+                                                    <span class="text-muted fs-4 fw-semibold">Number of Students in department</span>
                                                 </div>
                                             </div>
                                         </div>
@@ -159,29 +88,6 @@
                                     <!--end::Card body-->
                                 </div>
                                 <!--end::Card-->
-                            </div>
-                            <div class="col">
-                                <!--begin::Reward Tier-->
-                                <a href="/qrcode/{{context.qr_code}}/" class="card bg-info hoverable h-md-100">
-                                    <!--begin::Body-->
-                                    <div class="card-body">
-                                        <!--begin::Svg Icon | path: icons/duotune/general/gen020.svg-->
-                                        <span class="svg-icon svg-icon-white svg-icon-3x ms-n1">
-                                            <svg width="800px" height="800px" viewBox="0 0 24 24" fill="none"
-                                                xmlns="http://www.w3.org/2000/svg">
-                                                <path
-                                                    d="M8 22.0002H16C18.8284 22.0002 20.2426 22.0002 21.1213 21.1215C22 20.2429 22 18.8286 22 16.0002V15.0002C22 12.1718 22 10.7576 21.1213 9.8789C20.3529 9.11051 19.175 9.01406 17 9.00195M7 9.00195C4.82497 9.01406 3.64706 9.11051 2.87868 9.87889C2 10.7576 2 12.1718 2 15.0002L2 16.0002C2 18.8286 2 20.2429 2.87868 21.1215C3.17848 21.4213 3.54062 21.6188 4 21.749"
-                                                    stroke="#1C274C" stroke-width="1.5" stroke-linecap="round" />
-                                                <path d="M12 2L12 15M12 15L9 11.5M12 15L15 11.5" stroke="#1C274C"
-                                                    stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
-                                            </svg>
-                                        </span>
-                                        <!--end::Svg Icon-->
-                                        <div class="text-white fw-bold fs-2 mt-5">Download Student QR CODE</div>
-                                    </div>
-                                    <!--end::Body-->
-                                </a>
-                                <!--end::Reward Tier-->
                             </div>
                         </div>
                         <!--begin::Card-->
@@ -206,7 +112,7 @@
                                         <!--end::Svg Icon-->
                                         <input type="text" data-kt-ecommerce-order-filter="search"
                                             class="form-control form-control-solid w-250px ps-14"
-                                            placeholder="Search Report" />
+                                            placeholder="Search Students" />
                                     </div>
                                     <!--end::Search-->
                                     <!--begin::Export buttons-->
@@ -277,12 +183,9 @@
                                     <thead class="border-bottom border-gray-200 fs-7 fw-bold">
                                         <!--begin::Table row-->
                                         <tr class="text-start text-muted text-uppercase gs-0">
-                                            <th class="min-w-100px">Book Title</th>
-                                            <th class="min-w-100px">Book Category</th>
-                                            <th>Returned</th>
-                                            <th class="min-w-100px">Borowed Date</th>
-                                            <th>Return Date</th>
-                                            <th class="min-w-100px">Remaining Days</th>
+                                            <th class="min-w-100px">Student</th>
+                                            <th class="min-w-100px">email</th>
+                                            <th class="min-w-100px">Level</th>
                                         </tr>
                                         <!--end::Table row-->
                                     </thead>
@@ -291,25 +194,12 @@
                                     <!--begin::Table body-->
                                     <tbody class="fs-6 fw-semibold text-gray-600">
 
-                                        {% for borrowed_book in context.student.books_borrowed %}
+                                        {% for student in context.department.students %}
                                         <!--begin::Table row-->
                                         <tr>
-                                            <td class="text-capitalize">{{borrowed_book.book.title}}
-                                                {{borrowed_book.student.user.lastname}}</td>
-                                            <td class="text-capitalize">{{borrowed_book.book.category.name}}</td>
-                                            <!--begin::Status=-->
-                                            {% if borrowed_book.is_returened == True %}
-                                            <td>
-                                                <span class="badge badge-light-success">Returned</span>
-                                            </td>
-                                            {% else %}
-                                            <td>
-                                                <span class="badge badge-light-warning">Not Returned</span>
-                                            </td>
-                                            {% endif %}
-                                            <td>{{borrowed_book.borrowed_date}}</td>
-                                            <td>{{borrowed_book.return_date}}</td>
-                                            <td>{{borrowed_book.remaining_days}}</td>
+                                            <td class="text-capitalize"><a href="/student/{{student.id}}/">{{student.user.firstname}} {{student.user.lastname}}</a></td>
+                                            <td class="text-lowercase">{{student.user.email}}</td>
+                                            <td>{{student.student_level}}</td>
                                         </tr>
                                         <!--end::Table row-->
                                         {% endfor %}
@@ -346,101 +236,21 @@
                                         {% if messages %}
                                         <ul class="flash">
                                             {% for message in messages %}
-                                            <li class="{{ message.category }}">{{ message }}</li>
+                                            <li class="{{ message.department }}">{{ message }}</li>
                                             {% endfor %}
                                         </ul>
                                         {% endif %}
                                         {% endwith %}
                                     </div>
-                                    <!--begin::Row-->
-                                    <div class="row row-cols-1 row-cols-md-2">
-                                        <!--begin::Col-->
-                                        <div class="col">
-                                            <div class="fv-row mb-7">
-                                                <!--begin::Label-->
-                                                <label class="fs-6 fw-semibold mb-2 ">First Name</label>
-                                                <!--end::Label-->
-                                                <!--begin::Input-->
-                                                <input type="text"
-                                                    class="form-control form-control-solid text-capitalize"
-                                                    placeholder="{{context.student.user.firstname}}" name="firstname" />
-                                                <!--end::Input-->
-                                            </div>
-                                        </div>
-                                        <!--end::Col-->
-                                        <div class="col">
-                                            <div class="fv-row mb-7">
-                                                <!--begin::Label-->
-                                                <label class="fs-6 fw-semibold mb-2 ">Last Name</label>
-                                                <!--end::Label-->
-                                                <!--begin::Input-->
-                                                <input type="text"
-                                                    class="form-control form-control-solid text-capitalize"
-                                                    placeholder="{{context.student.user.lastname}}" name="lastname" />
-                                                <!--end::Input-->
-                                            </div>
-                                        </div>
-                                    </div>
+                                
                                     <div class="fv-row mb-7">
                                         <!--begin::Label-->
-                                        <label class="fs-6 fw-semibold mb-2 ">Email</label>
+                                        <label class="fs-6 fw-semibold mb-2 ">Name</label>
                                         <!--end::Label-->
                                         <!--begin::Input-->
                                         <input type="text" class="form-control form-control-solid text-capitalize"
-                                            placeholder="{{context.student.user.email}}" name="email" />
+                                            placeholder="{{context.department.name}}" name="name" />
                                         <!--end::Input-->
-                                    </div>
-                                    <!--begin::Input group-->
-                                    <div class="d-flex flex-column mb-8 fv-row">
-                                        <!--begin::Col-->
-                                        <label class="required fs-6 fw-semibold mb-2">Department</label>
-                                        <select class="form-select form-select-solid" data-control="select2"
-                                            data-hide-search="true" data-placeholder="Select student department"
-                                            name="department_id">
-                                            <option value="">Select department...</option>
-                                            {% for department in context.departments %}
-                                            <option value="{{department.id}}">{{department.name}}</option>
-                                            {% endfor %}
-                                        </select>
-                                        <!--end::Col-->
-                                    </div>
-                                    <!--end::Input group-->
-                                    <div class="row row-cols-1 row-cols-md-2">
-                                        <!--begin::Col-->
-                                        <div class="col">
-                                            <div class="fv-row mb-7">
-                                                <!--begin::Label-->
-                                                <label class="fs-6 fw-semibold mb-2 ">Matriculation Number</label>
-                                                <!--end::Label-->
-                                                <!--begin::Input-->
-                                                <input type="text"
-                                                    class="form-control form-control-solid text-uppercase"
-                                                    placeholder="{{context.student.matirc_number}}" name="matirc_number"
-                                                    maxlength="10" />
-                                                <!--end::Input-->
-                                            </div>
-                                        </div>
-                                        <!--end::Col-->
-                                        <div class="col">
-                                            <div class="fv-row mb-7">
-                                                <label class="required fs-6 fw-semibold mb-2">Level</label>
-                                                <select class="form-select form-select-solid" data-control="select2"
-                                                    data-hide-search="true" data-placeholder="Select student level"
-                                                    name="level">
-                                                    <option value="">Select level...</option>
-                                                    <option value="{{context.levels.LEVEL_100.value}}">
-                                                        {{context.levels.LEVEL_100.value}}</option>
-                                                    <option value="{{context.levels.LEVEL_200.value}}">
-                                                        {{context.levels.LEVEL_200.value}}</option>
-                                                    <option value="{{context.levels.LEVEL_300.value}}">
-                                                        {{context.levels.LEVEL_300.value}}</option>
-                                                    <option value="{{context.levels.LEVEL_400.value}}">
-                                                        {{context.levels.LEVEL_400.value}}</option>
-                                                    <option value="{{context.levels.LEVEL_500.value}}">
-                                                        {{context.levels.LEVEL_500.value}}</option>
-                                                </select>
-                                            </div>
-                                        </div>
                                     </div>
                                     <!--end::Row-->
                                     <div class="d-flex justify-content-between">
@@ -449,8 +259,7 @@
                                             class="btn btn-light-primary">
                                             <span class="indicator-label">Save</span>
                                         </button>
-                                        <a href="/student/{{context.student.id}}/?delete=true"
-                                            class="btn btn-danger er fs-6 ">Delete Student</a>
+                                        <a href="/department/{{context.department.id}}/?delete=true" class="btn btn-danger er fs-6 ">Delete Department</a>
                                         </a>
                                         <!--end::Button-->
                                     </div>
@@ -460,6 +269,7 @@
                             <!--end::Card body-->
                         </div>
                         <!--end::Card-->
+                    
                     </div>
                     <!--end:::Tab pane-->
                 </div>

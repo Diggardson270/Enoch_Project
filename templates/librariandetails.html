@@ -80,7 +80,11 @@
                                                 </span>
                                                 <!--end::Svg Icon-->
                                                 <div class="ms-2">{{context.librarian.email}}
-                                                    <span class="text-muted fs-4 fw-semibold">Email</span>
+                                                    {% if context.librarian.is_verified %}
+                                                    <span class="badge badge-success">Verified</span>
+                                                    {% else %}
+                                                    <span class="badge badge-danger">Not Verified</span>
+                                                    {% endif %}
                                                 </div>
                                             </div>
                                         </div>

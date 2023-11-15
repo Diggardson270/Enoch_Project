@@ -116,6 +116,22 @@ class User(db.Model):
     #     return f'User {self.email}'
 
 
+
+class Department(db.Model):
+    __table_args__ = (db.UniqueConstraint('name'), )
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(100), nullable=False)
+    students: db.Mapped[List["Student"]] = db.relationship(
+        'Student', back_populates="department", cascade="all, delete-orphan")
+
+    def __str__(self) -> str:
+        return f'User {self.name}'
+
+    @property
+    def number_of_students(self):
+        return len(self.students)
+
+
 class Student(db.Model):
 
     # __tablename__ = "students"
@@ -130,6 +146,9 @@ class Student(db.Model):
     books_borrowed: db.Mapped[List['BorowedBook']] = db.relationship(
         'BorowedBook', back_populates="student", cascade="all, delete-orphan")
     bio = db.Column(db.Text)
+    department = db.relationship(Department, lazy=True)
+    department_id = db.Column(
+        db.Integer, db.ForeignKey(Department.id), nullable=False)
 
     def __repr__(self):
         return f'<Student {self.id}>'
@@ -484,6 +503,7 @@ def book_detail_page(id, *args, **kwargs):
 def get_and_create_student():
     # Get all students from the database
     students = Student.query.all()
+    departments = Department.query.all()
 
     if request.method == "POST":
         # Get the form data
@@ -492,6 +512,7 @@ def get_and_create_student():
         email = request.form["email"]
         level = request.form["student_level"]
         matric_number = request.form["matric_number"].lower().strip()
+        department = request.form["department"]
 
         # Create a new user
         user = User()
@@ -526,13 +547,16 @@ def get_and_create_student():
             student.user_id = user.id
             student.student_level = level
             student.matirc_number = matric_number
-
+            student.department_id = department
+            db.session.add(student)
+            db.session.flush()
             # Generate the QR code and save it
             data = {
                 "user id": user.id,
                 "name": fullname,
                 "email": user.email,
-                "level": student.student_level
+                "level": student.student_level,
+                "department": student.department.name
             }
             student_qrcode = qrcode.make(data=data, box_size=4, border=5)
             student_qrcode.save(f"static/{qr_dir}")
@@ -547,7 +571,8 @@ def get_and_create_student():
     # Prepare the context for rendering the template
     context = {
         "students": students,
-        "levels": StudentLevel
+        "levels": StudentLevel,
+        "departments":departments
     }
 
     # Render the students page
@@ -561,9 +586,10 @@ def student_detail_page(id, *args):
     View function for displaying and updating student details.
     """
 
-    # Get the student and user from the database
+    # Get the student and user and department from the database
     student = Student.query.get_or_404(id)
     user = User.query.get_or_404(student.user_id)
+    departments = Department.query.all()
 
     # Generate full name and QR code file name
     fullname = f"{student.user.firstname} {student.user.lastname}".title().strip()
@@ -639,7 +665,8 @@ def student_detail_page(id, *args):
     context = {
         "student": student,
         "qr_code": url_for('static', filename=f"students/{qr_code}"),
-        "levels": StudentLevel
+        "levels": StudentLevel,
+        "departments":departments
     }
     return render_template("studentdetails.html", context=context)
 
@@ -663,7 +690,7 @@ def borrow_book(*args, **kwargs):
     students_matirc_number_list = [student.matirc_number for student in students]  
     if request.args:
         if request.args.get("submit_method")== "use_qr_code":
-            return "True"
+            return redirect(url_for("borrow_with_qr"))
         else:
             if request.args.get("submit_method")== "input_manually":
             
@@ -838,6 +865,86 @@ def category_detail_page(id, *args, **kwargs):
         "category": category,
     }
     return render_template("categorydetails.html", context=context)
+
+
+
+
+@app.route("/departments/", methods=["GET", "POST"])
+@login_required
+def get_and_create_department():
+    # Get all department from the database
+    department = Department.query.all()
+
+    # If the request method is POST, create a new department
+    if request.method == "POST":
+        # Get the name of the category from the form data
+        name = request.form["name"].lower().strip()
+
+        # Create a new Department object
+        department = Department()
+        department.name = name
+
+        # Check if a department with the same name already exists
+        existing_category_name = department.query.filter_by(
+            name=department.name).first()
+
+        # If the department already exists, display an error message
+        if existing_category_name:
+            flash("Sorry, but this department already exists!!! ")
+        # Otherwise, add the department to the database and redirect to the departments page
+        else:
+            db.session.add(department)
+            db.session.commit()
+            return redirect("/departments/")
+
+    # Prepare the context for rendering the template
+    context = {
+        "departments": department,
+    }
+
+    # Render the departments.html template with the provided context
+    return render_template("departments.html", context=context)
+
+
+@app.route("/department/<int:id>/", methods=["GET", "POST"])
+@login_required
+def department_detail_page(id, *args, **kwargs):
+    """
+    Render the department detail page and handle form submission.
+
+    Args:
+        id (int): The id of the category.
+
+    Returns:
+        str: The rendered template.
+    """
+
+    department = Department.query.get_or_404(id)
+
+    if request.method == "POST":
+        for key in request.form:
+            if request.form[key] != "":
+                existing_department = Department.query.filter_by(
+                    name=request.form["name"]).first()
+                if existing_department:
+                    flash("Sorry, but this category name already exists!")
+                else:
+                    department.name = request.form["name"]
+                    db.session.commit()
+                    return redirect(url_for("department_detail_page", id=id))
+
+    if request.args.get("delete") == "true":
+        students = Student.query.filter_by(department=department).all()
+        db.session.delete(department)
+        for student in students:
+            db.session.delete(student)
+        db.session.commit()
+        return redirect(url_for("get_and_create_department"))
+
+    context = {
+        "department": department,
+    }
+    return render_template("departmentsdetails.html", context=context)
 
 
 @app.route("/authors/", methods=["GET", "POST"])
