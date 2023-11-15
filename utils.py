@@ -3,7 +3,15 @@ import string
 import bcrypt
 from cryptography.fernet import Fernet
 from datetime import datetime
+import os
+import shutil
 
+def delete_directory(directory_path):
+    try:
+        shutil.rmtree(directory_path)
+        print(f"Directory '{directory_path}' deleted successfully.")
+    except OSError as e:
+        print(f"Error deleting directory '{directory_path}': {e}")
 
 def check_password(enterd_password:str, hash_password:bytes):
     

@@ -7,9 +7,6 @@ __pycache__
 .env
 templates/test.html
 static/js/widgets.bundle.js
-*.png
-*.png
-*.png
-*.png
-*.png
-static/book_qrcodes/the-prodigal-son.png
+static/book_qrcodes/*.png
+static/student/*.png
+

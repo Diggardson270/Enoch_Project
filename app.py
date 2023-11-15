@@ -23,7 +23,8 @@ from utils import (
     remove_more_than_one_occurance,
     return_student_and_books,
     encrypt_data,
-    decrypt_data
+    decrypt_data, 
+    delete_directory
 )
 
 import dotenv
@@ -177,6 +178,14 @@ class Student(db.Model):
     @property
     def total_books_borrowed(self):
         return self.number_of_not_returned_books + self.number_of_returned_books
+    
+    
+    
+    @property
+    def qr_dir(self):
+        fullname = f"{self.firstname} {self.lastname}".title().strip()
+        qr_dir = f'students/{fullname.lower().replace(" ", "-")}.png'
+        return qr_dir
 
 
 class Author(db.Model):
@@ -256,6 +265,12 @@ class Book(db.Model):
             book_id=self.id, is_returened=False).all()
         # return len(borrowed_books)
         return len(borrowed_books)
+    
+    
+    @property
+    def  qr_dir(self):
+        qr_dir = f"book_qrcodes/{self.slug}.png"
+        return qr_dir
 
 
 class BorowedBook(db.Model):
@@ -385,10 +400,6 @@ def get_and_create_books():
             # Display an error message if the book title already exists
             flash("Sorry, but this title already exists!!! ")
         else:
-            # Replace spaces in the book title with hyphens
-            slug = book.title.replace(" ", "-").lower().strip()
-            qr_dir = f"book_qrcodes/{slug}.png"
-
             # Save the new book to the database
             db.session.add(book)
             db.session.commit()
@@ -405,7 +416,7 @@ def get_and_create_books():
 
             # Generate a QR code for the book and save it to the static directory
             book_qrcode = qrcode.make(data=data, box_size=4, border=5)
-            book_qrcode.save(f"static/{qr_dir}")
+            book_qrcode.save(f"static/{book.qr_dir}")
 
             # Redirect to the books page after successfully creating a book
             return redirect("/books/")
@@ -462,7 +473,7 @@ def book_detail_page(id, *args, **kwargs):
                 "category_name": book.category.name
             }
             book_qrcode = qrcode.make(data=data, box_size=4, border=5)
-            book_qrcode.save(f"static/{qr_dir}")
+            book_qrcode.save(f"static/{book.qr_dir}")
             db.session.commit()
             return redirect(url_for("book_detail_page", id=id))
 
@@ -471,6 +482,7 @@ def book_detail_page(id, *args, **kwargs):
         borrowed_books = BorowedBook.query.filter_by(book_id=book.id)
         for borroewd in borrowed_books:
             db.session.delete(borroewd)
+        delete_directory("/static/{book.qr_dir}")
         db.session.delete(book)
         db.session.commit()
         return redirect(url_for("get_and_create_books"))
@@ -534,9 +546,6 @@ def get_and_create_student():
             if existing_user_matric_number:
                 flash("Sorry, but this matric number already exits!!! ")
         else:
-            # Generate the full name and QR directory
-            fullname = f"{user.firstname} {user.lastname}".title().strip()
-            qr_dir = f'students/{fullname.lower().replace(" ", "-")}.png'
 
             # Add the new user to the database
             db.session.add(user)
@@ -559,7 +568,7 @@ def get_and_create_student():
                 "department": student.department.name
             }
             student_qrcode = qrcode.make(data=data, box_size=4, border=5)
-            student_qrcode.save(f"static/{qr_dir}")
+            student_qrcode.save(f"static/{student.qr_dir}")
 
             # Add the new student to the database
             db.session.add(student)
@@ -631,9 +640,7 @@ def student_detail_page(id, *args):
                     # Remove previous QR code file
                     os.remove(os.path.join(basedir, previous_qr_dir))
 
-                    # Generate new full name and QR code file directory
-                    fullname = f"{user.firstname} {user.lastname}".title().strip()
-                    qr_dir = f'students/{fullname.lower().replace(" ", "-")}.png'
+             
 
                     # Generate data for QR code
                     data = {
@@ -646,7 +653,7 @@ def student_detail_page(id, *args):
 
                     # Generate and save student QR code
                     student_qrcode = qrcode.make(data=data, box_size=4, border=5)
-                    student_qrcode.save(f"static/{qr_dir}")
+                    student_qrcode.save(f"static/{student.qr_dir}")
 
                     # Commit changes to the database and redirect to the updated student detail page
                     db.session.commit()
@@ -657,6 +664,7 @@ def student_detail_page(id, *args):
         borrowed_books = BorowedBook.query.filter_by(student_id=student.id)
         for borroewd in borrowed_books:
             db.session.delete(borroewd)
+        delete_directory(student.qr_dir)
         db.session.delete(student)
         db.session.delete(user)
         db.session.commit()
@@ -1406,7 +1414,10 @@ def get_librarians_and_create():
         "librarians": librarians,
     }
 
-    return render_template("librarians.html", context=context)@app.route("/reset_password/", methods=["GET", "POST"])
+    return render_template("librarians.html", context=context)
+
+
+@app.route("/reset_password/", methods=["GET", "POST"])
 def reset_passworded(*args, **kwargs):
     """
     Resets the user's password.
@@ -1466,6 +1477,26 @@ if __name__ == "__main__":
             user.is_verified = True
             db.session.add(user)
             db.session.commit()
+        
+    if not os.path.exists("/static/student/"):
+        try:
+            os.makedirs("/static/student/")
+            print(f"Directory '/static/student/' created successfully.")
+        except OSError as e:
+            print(f"Error creating directory '/static/student/': {e}")
+    else:
+        print(f"Directory '/static/student/' already exists.")
+        
+        
+    if not os.path.exists("/static/student/"):
+        try:
+            os.makedirs("/static/book_qrcodes/")
+            print(f"Directory '/static/book_qrcodes/' created successfully.")
+        except OSError as e:
+            print(f"Error creating directory '/static/book_qrcodes/': {e}")
+    else:
+        print(f"Directory '/static/book_qrcodes/' already exists.")
+
 
     app.run(port=8000, debug=True)  # , host="0.0.0.0")
 
