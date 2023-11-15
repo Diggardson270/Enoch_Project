@@ -24,7 +24,7 @@ from utils import (
     return_student_and_books,
     encrypt_data,
     decrypt_data, 
-    delete_directory
+    delete_file
 )
 
 import dotenv
@@ -440,7 +440,6 @@ def book_detail_page(id, *args, **kwargs):
     """
     # Get the book details
     book = Book.query.get_or_404(id)
-    qr_code = book.slug
     authors = Author.query.all()
     categories = Category.query.all()
 
@@ -463,7 +462,6 @@ def book_detail_page(id, *args, **kwargs):
                         except AttributeError:
                             pass
             # Generate and save the QR code for the book
-            qr_dir = f"book_qrcodes/{book.slug}.png"
             data = {
                 "title": book.title,
                 "author_id": book.author_id,
@@ -482,7 +480,7 @@ def book_detail_page(id, *args, **kwargs):
         borrowed_books = BorowedBook.query.filter_by(book_id=book.id)
         for borroewd in borrowed_books:
             db.session.delete(borroewd)
-        delete_directory("/static/{book.qr_dir}")
+        delete_file(f"static/{book.qr_dir}")
         db.session.delete(book)
         db.session.commit()
         return redirect(url_for("get_and_create_books"))
@@ -505,7 +503,7 @@ def book_detail_page(id, *args, **kwargs):
         "authors": authors,
         "categories": categories,
         "borrowed_books": borrowed_books,
-        "qr_code": url_for('static', filename=f"book_qrcodes/{qr_code}.png"),
+        "qr_code": url_for('static', filename=f"{book.qr_dir}"),
     }
     return render_template("bookdetails.html", context=context)
 
@@ -559,6 +557,7 @@ def get_and_create_student():
             student.department_id = department
             db.session.add(student)
             db.session.flush()
+            fullname = f"{student.user.firstname} {student.user.lastname}".title().strip()
             # Generate the QR code and save it
             data = {
                 "user id": user.id,
@@ -602,7 +601,6 @@ def student_detail_page(id, *args):
 
     # Generate full name and QR code file name
     fullname = f"{student.user.firstname} {student.user.lastname}".title().strip()
-    qr_code = f'{fullname.lower().replace(" ", "-")}.png'
 
     # Generate previous full name and QR code file directory
     previous_first_name = user.firstname
@@ -664,7 +662,7 @@ def student_detail_page(id, *args):
         borrowed_books = BorowedBook.query.filter_by(student_id=student.id)
         for borroewd in borrowed_books:
             db.session.delete(borroewd)
-        delete_directory(student.qr_dir)
+        delete_file(f"static/{student.qr_dir}")
         db.session.delete(student)
         db.session.delete(user)
         db.session.commit()
@@ -672,7 +670,7 @@ def student_detail_page(id, *args):
 
     context = {
         "student": student,
-        "qr_code": url_for('static', filename=f"students/{qr_code}"),
+        "qr_code": url_for('static', filename=f"{student.qr_dir}"),
         "levels": StudentLevel,
         "departments":departments
     }
@@ -1478,24 +1476,24 @@ if __name__ == "__main__":
             db.session.add(user)
             db.session.commit()
         
-    if not os.path.exists("/static/student/"):
+    if not os.path.exists("static/student/"):
         try:
-            os.makedirs("/static/student/")
-            print(f"Directory '/static/student/' created successfully.")
+            os.makedirs("static/student/")
+            print(f"Directory 'static/student/' created successfully.")
         except OSError as e:
-            print(f"Error creating directory '/static/student/': {e}")
+            print(f"Error creating directory 'static/student/': {e}")
     else:
-        print(f"Directory '/static/student/' already exists.")
+        print(f"Directory 'static/student/' already exists.")
         
         
-    if not os.path.exists("/static/student/"):
+    if not os.path.exists("static/student/"):
         try:
-            os.makedirs("/static/book_qrcodes/")
-            print(f"Directory '/static/book_qrcodes/' created successfully.")
+            os.makedirs("static/book_qrcodes/")
+            print(f"Directory 'static/book_qrcodes/' created successfully.")
         except OSError as e:
-            print(f"Error creating directory '/static/book_qrcodes/': {e}")
+            print(f"Error creating directory 'static/book_qrcodes/': {e}")
     else:
-        print(f"Directory '/static/book_qrcodes/' already exists.")
+        print(f"Directory 'static/book_qrcodes/' already exists.")
 
 
     app.run(port=8000, debug=True)  # , host="0.0.0.0")

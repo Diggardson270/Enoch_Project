@@ -7,6 +7,6 @@ __pycache__
 .env
 templates/test.html
 static/js/widgets.bundle.js
-static/book_qrcodes/*.png
-static/student/*.png
+static/book_qrcodes/
+static/student/
 
