@@ -283,7 +283,7 @@ class BorowedBook(db.Model):
     student_id = db.Column(
         db.Integer, db.ForeignKey(Student.id), nullable=False)
     student = db.relationship(Student, lazy=True)
-    is_returened = db.Column(db.Boolean, default=False,
+    is_returned= db.Column(db.Boolean, default=False,
                              server_default="False", nullable=False)
     return_date = db.Column(db.DateTime, default=datetime.datetime.utcnow)
     borrowed_date = db.Column(db.DateTime(timezone=True),
@@ -489,7 +489,7 @@ def book_detail_page(id, *args, **kwargs):
     if request.args.get("returned"):
         borrowed_book = BorowedBook.query.get_or_404(request.args.get("id"))
         if borrowed_book:
-            borrowed_book.is_returened = request.args.get("returned") == "true"
+            borrowed_book.is_returned= request.args.get("returned") == "true"
             if borrowed_book.is_returened:
                 book.no_of_stock += 1
             else:
