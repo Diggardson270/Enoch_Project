@@ -183,7 +183,7 @@ class Student(db.Model):
     
     @property
     def qr_dir(self):
-        fullname = f"{self.firstname} {self.lastname}".title().strip()
+        fullname = f"{self.user.firstname} {self.user.lastname}".title().strip()
         qr_dir = f'students/{fullname.lower().replace(" ", "-")}.png'
         return qr_dir
 
@@ -1478,15 +1478,15 @@ if __name__ == "__main__":
         
     if not os.path.exists("static/student/"):
         try:
-            os.makedirs("static/student/")
-            print(f"Directory 'static/student/' created successfully.")
+            os.makedirs("static/students/")
+            print(f"Directory 'static/students/' created successfully.")
         except OSError as e:
-            print(f"Error creating directory 'static/student/': {e}")
+            print(f"Error creating directory 'static/students/': {e}")
     else:
-        print(f"Directory 'static/student/' already exists.")
+        print(f"Directory 'static/students/' already exists.")
         
         
-    if not os.path.exists("static/student/"):
+    if not os.path.exists("static/students/"):
         try:
             os.makedirs("static/book_qrcodes/")
             print(f"Directory 'static/book_qrcodes/' created successfully.")

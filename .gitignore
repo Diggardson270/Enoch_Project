@@ -8,5 +8,5 @@ __pycache__
 templates/test.html
 static/js/widgets.bundle.js
 static/book_qrcodes/
-static/student/
+static/students/
 
