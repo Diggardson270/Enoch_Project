@@ -1486,7 +1486,7 @@ if __name__ == "__main__":
         print(f"Directory 'static/students/' already exists.")
         
         
-    if not os.path.exists("static/students/"):
+    if not os.path.exists("static/book_qrcodes/"):
         try:
             os.makedirs("static/book_qrcodes/")
             print(f"Directory 'static/book_qrcodes/' created successfully.")
@@ -1496,7 +1496,7 @@ if __name__ == "__main__":
         print(f"Directory 'static/book_qrcodes/' already exists.")
 
 
-    app.run(port=8000, debug=True)  # , host="0.0.0.0")
+    app.run(port=8000, debug=True , host="0.0.0.0")
 
 
 # TODO check the borrow url endpoint, it is having some issues
