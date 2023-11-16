@@ -289,7 +289,7 @@
                                                 {{borrowed_book.student.user.lastname}}</td>
                                             <!--begin::Status=-->
                                             <td>
-                                                {% if borrowed_book.is_returened == True %}
+                                                {% if borrowed_book.is_returned == True %}
                                                 <span class="badge badge-light-success">Returned</span>
                                                 {% else %}
 
@@ -301,7 +301,7 @@
                                             <td>{{borrowed_book.return_date_cleaned}}</td>
                                             <td>{{borrowed_book.remaining_days}}</td>
                                             <td>
-                                                {% if borrowed_book.is_returened != True %}
+                                                {% if borrowed_book.is_returned != True %}
                                                 <a href="/book/{{context.book.id}}/?returned=true&id={{borrowed_book.id}}"
                                                     class="btn btn-success fs-8 ">Mark as Returned</a>
                                                 </a>

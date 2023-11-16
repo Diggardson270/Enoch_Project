@@ -161,7 +161,7 @@ class Student(db.Model):
         returned = list()
         not_returned = list()
         for book in self.books_borrowed:
-            if bool(book.is_returened):
+            if bool(book.is_returned):
                 returned.append(book)
             else:
                 not_returned.append(book)
@@ -262,7 +262,7 @@ class Book(db.Model):
     @property
     def no_borrowed(self):
         borrowed_books = BorowedBook.query.filter_by(
-            book_id=self.id, is_returened=False).all()
+            book_id=self.id, is_returned=False).all()
         # return len(borrowed_books)
         return len(borrowed_books)
     
@@ -297,7 +297,7 @@ class BorowedBook(db.Model):
         days_left = self.return_date - self.borrowed_date
         if days_left.days < 0:
             return "0:00:00"
-        elif self.is_returened:
+        elif self.is_returned:
             return None
         return f"{days_left.days} days"
 
@@ -313,7 +313,7 @@ def home(*args, **kwargs):
     books = Book.query.all()
 
     # Retrieve all borrowed books that haven't been returned
-    borrowed = BorowedBook.query.filter_by(is_returened=False).all()
+    borrowed = BorowedBook.query.filter_by(is_returned=False).all()
 
     # Retrieve all categories
     categories = Category.query.all()
@@ -322,7 +322,7 @@ def home(*args, **kwargs):
     no_of_books = sum([i.no_of_stock for i in books])
 
     # Calculate the total number of books borrowed
-    no_borrowed = len(BorowedBook.query.filter_by(is_returened=False).all())
+    no_borrowed = len(BorowedBook.query.filter_by(is_returned=False).all())
 
     # Reverse the list of borrowed books
     borrowed.reverse()
@@ -490,7 +490,7 @@ def book_detail_page(id, *args, **kwargs):
         borrowed_book = BorowedBook.query.get_or_404(request.args.get("id"))
         if borrowed_book:
             borrowed_book.is_returned= request.args.get("returned") == "true"
-            if borrowed_book.is_returened:
+            if borrowed_book.is_returned:
                 book.no_of_stock += 1
             else:
                 book.no_of_stock -= 1
