@@ -274,6 +274,7 @@
                                             <th>Return Date</th>
                                             <th class="min-w-100px">Remaining Days</th>
                                             <th class="min-w-100px">Mark as Returned</th>
+                                            <th class="min-w-100px">Date Submitted</th>
                                         </tr>
                                         <!--end::Table row-->
                                     </thead>
@@ -313,6 +314,7 @@
                                                 <!--end::Button-->
 
                                             </td>
+                                            <td>{{borrowed_book.date_submitted_cleaned}}</td>
                                         </tr>
                                         <!--end::Table row-->
                                         {% endfor %}

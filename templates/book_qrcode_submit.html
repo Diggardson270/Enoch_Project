@@ -10,7 +10,7 @@
             <!--begin::Heading-->
             <div class="mb-13 text-center">
                 <!--begin::Title-->
-                <h1 class="mb-3">User Info</h1>
+                <h1 class="mb-3">Book Info</h1>
                 <!--end::Title-->
             </div>
             <!--end::Heading-->
@@ -63,6 +63,15 @@
                 <!--end::Label-->
                 <input type="number" class="form-control form-control-solid" readonly
                     name="pending" value="{{context.book.no_of_stock}}"/>
+            </div>
+            <div class="d-flex flex-column mb-8 fv-row">
+                <!--begin::Label-->
+                <label class="d-flex align-items-center fs-6 fw-semibold mb-2">
+                    <span class="required">Number in Stock</span>
+                </label>
+                <!--end::Label-->
+                <input type="number" class="form-control form-control-solid" readonly
+                    name="no_of_days_to_borrow" />
             </div>
             <!--begin::Actions-->
             <div class="text-center">

@@ -125,7 +125,6 @@
                                 <th class="min-w-125px">No in stock</th>
                                 <th class="min-w-125px">Pending Return</th>
                                 <th class="min-w-125px">Student Matric number</th>
-                                <th class="min-w-125px">Days</th>
                             </tr>
                             <!--end::Table row-->
                         </thead>
@@ -172,10 +171,7 @@
                                 <td>
                                 <textarea class="form-control form-control-flush mb-3 border border-4 border-success rounded" rows="2" data-kt-element="input" name="{{book.id}}_matirc_number_items" required placeholder="Enter students Matric numbers, Seperated by comma (,)"></textarea>
                                 </td>
-                                {% endif %}
-                                <td>
-                                    <input type="number" name="no_of_days" class="form-control form-control-flush mb-3 border border-4 border-success rounded">
-                                </td>
+                                {% endif %}                                
                                 <!--end::Two step=-->
                             </tr>
                             {% endfor %}

@@ -285,7 +285,8 @@ class BorowedBook(db.Model):
     student = db.relationship(Student, lazy=True)
     is_returned= db.Column(db.Boolean, default=False,
                              server_default="False", nullable=False)
-    return_date = db.Column(db.DateTime, default=datetime.datetime.utcnow)
+    return_date = db.Column(db.DateTime)
+    date_submitted = db.Column(db.DateTime)
     borrowed_date = db.Column(db.DateTime(timezone=True),
                               server_default=func.now())
 
@@ -300,6 +301,13 @@ class BorowedBook(db.Model):
         elif self.is_returned:
             return None
         return f"{days_left.days} days"
+    
+    
+    @property
+    def date_submitted_cleaned(self):
+        if self.date_submitted is None:
+            return None
+        return f"{self.date_submitted.year}-{self.date_submitted.month}-{self.date_submitted.day} {self.date_submitted.hour}:{self.date_submitted.minute}"
 
     @property
     def return_date_cleaned(self):
@@ -490,10 +498,13 @@ def book_detail_page(id, *args, **kwargs):
         borrowed_book = BorowedBook.query.get_or_404(request.args.get("id"))
         if borrowed_book:
             borrowed_book.is_returned= request.args.get("returned") == "true"
-            if borrowed_book.is_returned:
+            if  borrowed_book.is_returned:
                 book.no_of_stock += 1
+                borrowed_book.date_submitted = datetime.datetime.now()
+                
             else:
                 book.no_of_stock -= 1
+                borrowed_book.date_submitted = None
             db.session.commit()
             return redirect(url_for("book_detail_page", id=id))
 
@@ -771,7 +782,7 @@ def borrow_with_qr(*args, **kwargs):
         if student is not None and book is not None:
             if request.method == "POST":
                 # Create a new instance of BorrowedBook
-                borrow_book = BorowedBook(book_id=book.id, student_id=student.id)
+                borrow_book = BorowedBook(book_id=book.id, student_id=student.id, return_date=datetime.timedelta(days=book.no_of_borrowd_days) + datetime.datetime.now())
                 db.session.add(borrow_book)
                 db.session.commit()
                 return redirect(url_for("home"))
